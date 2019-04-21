@@ -12,7 +12,6 @@ class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManag
 private:
   FileOutputManager fileOutputer;
   Faculty* facultyToAddToTable;
-  //DoubleLinkedList<Faculty*>* listOfFacultyToDelete;
 
   //for filling this table up from a text file:
   int currentLineNumber;
@@ -28,14 +27,12 @@ public:
   ~FacultyTable();
 
   void setUpTable(FacultyTable& objectToBuildUsingTheTextFile);
-  //void inOrderPrint(TreeNode<int, Faculty>* node);
 
   int getCurrentLineNumber();
   int getNumberOfFirstLineForDataSet();
   int getNumberOfLineWhereNumberOfAdviseesWasAt();
   int getNumberOfAdvisees();
 
-  //Faculty getFacultyToAddToTable();
   void deleteListOfAdviseesForEachFaculty(TreeNode<int, Faculty>* node);
 
   void readFromFileWithSpecificRules(std::string line);

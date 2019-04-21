@@ -28,7 +28,6 @@ void FacultyTable::deleteListOfAdviseesForEachFaculty(TreeNode<int, Faculty>* no
 
     deleteListOfAdviseesForEachFaculty(node->left);
     delete node->getValue().advisees;
-    //std::cout<<"Deleting lists allocated for each faculty in the tree..."<<std::endl;
     deleteListOfAdviseesForEachFaculty(node->right);
 
   }

@@ -2,6 +2,7 @@
 //#include "Student.h"
 //#include "Faculty.h"
 #include "FacultyTable.h"
+#include "StudentTable.h"
 
 using namespace std;
 
@@ -76,9 +77,13 @@ int main(int argc, char const *argv[]) {
 
   cout<<endl;
   */
-  FacultyTable table;
-  table.setUpTable(table);
-  table.printFaculty(table.getRoot());
+  FacultyTable facultyTable;
+  facultyTable.setUpTable(facultyTable);
+  facultyTable.printFaculty(facultyTable.getRoot());
+
+  StudentTable studentTable;
+  studentTable.setUpTable(studentTable);
+  studentTable.printStudents(studentTable.getRoot());
 
   return 0;
 }
