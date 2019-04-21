@@ -1,6 +1,9 @@
 #include "Faculty.h"
+using namespace std;
 
 Faculty::Faculty() {
+
+  advisees = new DoubleLinkedList<unsigned int>();
 
 }
 
@@ -10,40 +13,59 @@ Faculty::Faculty(std::string name, std::string level, std::string department, un
   setLevel(level);
   setDepartment(department);
   setPersonID(facultyID);
+  advisees = new DoubleLinkedList<unsigned int>();
 
 }
 
-Faculty::Faculty(std::string name, std::string level, std::string department, unsigned int facultyID, DoubleLinkedList<unsigned int> advisees){
+Faculty::Faculty(std::string name, std::string level, std::string department, unsigned int facultyID, int* arrayOfAdvisees, int numberOfAdvisees){
 
   setName(name);
   setLevel(level);
   setDepartment(department);
   setPersonID(facultyID);
-  this->advisees = advisees;
+
+  advisees = new DoubleLinkedList<unsigned int>();
+  for (int i  = 0; i < numberOfAdvisees; i++) {
+
+    cout<<"Adding "<<arrayOfAdvisees[i]<<" to list"<<endl;
+    advisees->addFront(arrayOfAdvisees[i]);
+
+  }
 
 }
 
-const std::string& Faculty::getDepartment() const {
+Faculty::~Faculty() {
+
+}
+
+void Faculty::printAdviseeIds() const{
+
+  advisees->printList();
+
+}
+
+/*const std::string& Faculty::getDepartment() const {
 
   return department;
 
-}
+}*/
 
-const DoubleLinkedList<unsigned int>& Faculty::getAdvisees() const {
+
+/*const DoubleLinkedList<unsigned int>* Faculty::getAdvisees() const {
 
   return advisees;
 
-}
+}*/
 
 
 void Faculty::addAdvisee(unsigned int IDOfAdviseeToAdd) {
 
-  advisees.addFront(IDOfAdviseeToAdd);
+  advisees->addFront(IDOfAdviseeToAdd);
 }
 
 void Faculty::removeAdvisee(unsigned int IDOfAdviseeToRemove){
 
-  advisees.remove(IDOfAdviseeToRemove);
+  advisees->remove(IDOfAdviseeToRemove);
 
 }
 

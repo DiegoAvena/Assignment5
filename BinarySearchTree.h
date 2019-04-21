@@ -11,7 +11,7 @@ template <typename K, typename V>
 
 class BinarySearchTree {
 
-private:
+protected:
   TreeNode<K, V>* root;
   unsigned int size;
 
@@ -95,6 +95,7 @@ public:
 
   virtual ~BinarySearchTree() {
 
+    std::cout<<"Delete anything else in tree"<<std::endl;
     if (empty() == false) {
 
       deleteAll(root);
@@ -115,7 +116,8 @@ public:
     if (node != NULL) {
 
       inOrderPrint(node->left);
-      std::cout<<"Key: "<<node->getKey()<<" | Value: "<<node->getValue()<<std::endl;
+      std::cout<<"Key: "<<node->getKey()<<std::endl;
+      //std::cout<<"Key: "<<node->getKey()<<" | Value: "<<node->getValue()<<std::endl;
       inOrderPrint(node->right);
 
     }

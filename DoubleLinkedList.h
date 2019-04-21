@@ -36,6 +36,7 @@ public:
   //destructor
   ~DoubleLinkedList() {
 
+    std::cout<<"DELETING LIST"<<std::endl;
     while (empty() == false) {
 
       removeFront();
@@ -427,7 +428,7 @@ public:
   }
 
   //prints out all of the elements currently in the list:
-  void printList() throw(DoubleLinkedListEmptyException){
+  void printList() const throw(DoubleLinkedListEmptyException) {
 
     if (empty()) {
 

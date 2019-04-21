@@ -1,12 +1,12 @@
 #include <iostream>
-#include "Student.h"
-#include "Faculty.h"
+//#include "Student.h"
+//#include "Faculty.h"
+#include "FacultyTable.h"
 
 using namespace std;
 
 int main(int argc, char const *argv[]) {
-
-
+  /*
   Student studentA("Diego Avena", "Sophmore", "CPSC", 2299333, 1022111, 3.8);
   Student studentB("Micho urizo", "Sophmore", "CPSC", 2299606, 1022111, 3.9);
 
@@ -75,6 +75,10 @@ int main(int argc, char const *argv[]) {
   }
 
   cout<<endl;
+  */
+  FacultyTable table;
+  table.setUpTable(table);
+  table.printFaculty(table.getRoot());
 
   return 0;
 }
