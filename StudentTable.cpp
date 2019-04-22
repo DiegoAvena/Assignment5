@@ -1,4 +1,6 @@
 #include "StudentTable.h"
+//#include "FacultyTable.h"
+
 using namespace std;
 
 StudentTable::StudentTable():BinarySearchTree(){
@@ -27,6 +29,49 @@ void StudentTable::setUpTable(StudentTable& studentTableToBuild) {
   readFile("studentTable.txt", studentTableToBuild);
 
 }
+
+void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>* node, FacultyTable& treeToBaseReferenceOffOf) {
+
+  if (node != NULL) {
+
+    initializeReferentialIntegrityOfTable(node->left, treeToBaseReferenceOffOf);
+
+    if ((treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())) == false) {
+
+      //this student is assigned an advisor that does not exist in the faculty tree:
+      //std::cout<<"Student has an advisee that does not exist in the table!"<<endl;
+      int randomNumber = rand() % treeToBaseReferenceOffOf.listOfIDSThatExistInTree.getSize();
+      //std::cout<<"Number of possible faculties this student can be set to: "<<treeToBaseReferenceOffOf.listOfIDSThatExistInTree.getSize()<<endl;
+      //std::cout<<"Setting student to faculty located at index "<<randomNumber<<" in the list!"<<endl;
+      node->getValue().setAdvisorID(treeToBaseReferenceOffOf.listOfIDSThatExistInTree.findAt(randomNumber));
+      //cout<<node->getValue().getPersonID()<<endl;
+
+      bool needToAddStudentToAdvisorsList = true;
+      for (int i = 0; i < treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())->getValue().advisees->getSize(); i++) {
+
+        if (node->getValue().getPersonID() == treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())->getValue().advisees->findAt(i)) {
+
+          needToAddStudentToAdvisorsList = false;
+
+        }
+
+      }
+
+      if (needToAddStudentToAdvisorsList) {
+
+        //this student was assigned to an existing faculty advisor but that faculty advisor needs to be notified to add this student to their list:
+        treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())->getValue().advisees->addFront(node->getValue().getPersonID());
+
+      }
+
+    }
+
+    initializeReferentialIntegrityOfTable(node->right, treeToBaseReferenceOffOf);
+
+  }
+
+}
+
 
 void StudentTable::printStudents(TreeNode<int, Student>* node, BinarySearchTree<int, Faculty>& tree) {
 

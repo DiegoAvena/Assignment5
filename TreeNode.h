@@ -61,7 +61,7 @@ public:
 
   }
 
-  const V& getValue() {
+  V& getValue() {
 
     return this->value;
 

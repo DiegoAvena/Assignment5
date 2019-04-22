@@ -6,6 +6,11 @@
 #include "FileOutputManager.h"
 #include "FileInputManager.h"
 #include "Faculty.h"
+#include <stdlib.h> // for access to the rand method
+#include <cstdlib> //for access to RAND_MAX constant
+#include "DoubleLinkedList.h"
+#include "FacultyTable.h"
+#include <iostream>
 
 class StudentTable: public BinarySearchTree<int, Student>, public FileInputManager<StudentTable> {
 
@@ -16,6 +21,9 @@ private:
   Student studentToAddToTable;
 
 public:
+
+  //DoubleLinkedList<int> facultyIDs;
+
   StudentTable();
   StudentTable(int rootKey, Student rootValue);
   ~StudentTable();
@@ -25,6 +33,8 @@ public:
 
   void printASpecificStudent(BinarySearchTree<int, Faculty>& tree);
   void printFacultyInformationForASpecificStudent(BinarySearchTree<int, Faculty>& tree);
+
+  void initializeReferentialIntegrityOfTable(TreeNode<int, Student>* node, FacultyTable& treeToBaseReferenceOffOf);
 
   void readFromFileWithSpecificRules(std::string line);
 

@@ -224,11 +224,42 @@ void FacultyTable::setNumberOfAdvisees(int numberOfAdvisees) {
 
 }
 
-/*Faculty FacultyTable::getFacultyToAddToTable() {
+void FacultyTable::initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& treeToBaseReferenceOffOf) {
 
-  return facultyToAddToTable;
+  if (node != NULL) {
 
-}*/
+    initializeReferentialIntegrityOfTable(node->left, treeToBaseReferenceOffOf);
+
+    for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
+
+      if (treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i)) == NULL) {
+
+        //the faculty has an advisee that does not exist in the student table:
+        node->getValue().advisees->removeAt(i);
+
+      }
+      else if (treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i))->getValue().getStudentAdvisorID() != node->getValue().getPersonID()) {
+
+        //the faculty has an advisee that does exist in the student table, but this student has already been assigned to a different faculty member:
+        cout<<"This student has a different faculty assigned to them already!"<<endl;
+        node->getValue().advisees->removeAt(i);
+
+      }
+      /*else if (((treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i))->getValue().getStudentAdvisorID()) == (node->getValue().getPersonID())) &&
+      (node->getValue().advisees->find(treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i))->getValue().getPersonID()))) {
+
+        //the
+
+      }*/
+
+    }
+
+    initializeReferentialIntegrityOfTable(node->right, treeToBaseReferenceOffOf);
+
+  }
+
+}
+
 
 void FacultyTable::setUpTable(FacultyTable& objectToBuildUsingTheTextFile) {
 
@@ -242,7 +273,6 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
   if (currentLineNumber == 1) {
 
     //this is the faculty's id
-    //std::cout<<"Faculty ID: "<<stoi(line)<<std::endl;
     facultyToAddToTable->setPersonID(stoi(line));
 
   }
@@ -300,6 +330,7 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
 
     }
 
+    listOfIDSThatExistInTree.addFront(facultyToAddToTable->getPersonID());
     insert(facultyToAddToTable->getPersonID(), /*Faculty(facultyToAddToTable.getName(), facultyToAddToTable.getLevel(), facultyToAddToTable.getDepartment(), facultyToAddToTable.getPersonID(), arrayOfAdvisees, facultyToAddToTable.getAdvisees().getSize())*/*facultyToAddToTable);
     //delete facultyToAddToTable->advisees;
     delete facultyToAddToTable;

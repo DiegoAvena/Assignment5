@@ -7,6 +7,7 @@
 #include "FileInputManager.h"
 #include "DoubleLinkedList.h"
 #include "Student.h"
+#include "DoubleLinkedList.h"
 
 class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable> {
 
@@ -22,6 +23,8 @@ private:
 
 
 public:
+
+  DoubleLinkedList<int> listOfIDSThatExistInTree;
 
   FacultyTable();
   FacultyTable(int rootKey, Faculty rootValue);
@@ -46,6 +49,10 @@ public:
   void printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& tree);
   void printASpecificFacultyMember(BinarySearchTree<int, Student>& tree);
   void printAdviseeInfoForSpecificFacultyMember(BinarySearchTree<int, Student>& tree);
+
+  void initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& treeToBaseReferenceOffOf);
+
+  //DoubleLinkedList<int> getAllFacultiesThatExistInTable();
 
 };
 

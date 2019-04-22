@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 //#include "Student.h"
 //#include "Faculty.h"
 //#include "FacultyTable.h"
@@ -86,8 +87,10 @@ int main(int argc, char const *argv[]) {
   StudentTable studentTable;
   studentTable.setUpTable(studentTable);
   studentTable.printStudents(studentTable.getRoot());*/
+  srand(time(NULL));
+
   DataBaseManager dataBaseManager;
   dataBaseManager.presentMenuToUser();
-  
+
   return 0;
 }

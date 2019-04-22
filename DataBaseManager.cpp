@@ -14,6 +14,9 @@ void DataBaseManager::presentMenuToUser() {
   masterStudent.setUpTable(masterStudent);
   masterFaculty.setUpTable(masterFaculty);
 
+  masterStudent.initializeReferentialIntegrityOfTable(masterStudent.getRoot(), masterFaculty);
+  masterFaculty.initializeReferentialIntegrityOfTable(masterFaculty.getRoot(), masterStudent);
+  
   while (true) {
 
     cout<<"DATABASE MAIN MENU"<<endl;
