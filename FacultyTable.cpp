@@ -128,6 +128,54 @@ void FacultyTable::printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<i
 
 }
 
+void FacultyTable::printAdviseeInfoForSpecificFacultyMember(BinarySearchTree<int, Student>& tree) {
+
+  cout<<"Enter the ID of the faculty you wish to see the Advisee information for."<<endl;
+  int userResponse;
+  cin>>userResponse;
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cin.ignore();
+    cout<<"Invalid Input: You must enter an integer for the ID"<<endl;
+
+  }
+  else {
+
+    TreeNode<int, Faculty>* facultyNode = find(userResponse);
+
+    if (facultyNode != NULL) {
+
+      TreeNode<int, Student>* adviseeNode;
+
+      for (int i = 0; i < facultyNode->getValue().advisees->getSize(); i++) {
+
+        adviseeNode = tree.find(facultyNode->getValue().advisees->findAt(i));
+
+        cout<<"   ------------------------------------------"<<endl;
+        cout<<"   Advisee ID: "<<adviseeNode->getValue().getPersonID()<<endl;
+        cout<<"   Advisee Name: "<<adviseeNode->getValue().getName()<<endl;
+        cout<<"   Advisee Level: "<<adviseeNode->getValue().getLevel()<<endl;
+        cout<<"   Advisee Major: "<<adviseeNode->getValue().getMajor()<<endl;
+        cout<<"   Advisee GPA: "<<adviseeNode->getValue().getStudentGPA()<<endl;
+        cout<<"   ------------------------------------------"<<endl;
+
+      }
+
+    }
+    else {
+
+      cout<<"Sorry, but the faculty with the ID you entered does not exist in the current database"<<endl;
+
+    }
+
+  }
+
+
+}
+
+
 int FacultyTable::getCurrentLineNumber(){
 
   return currentLineNumber;

@@ -48,7 +48,82 @@ void StudentTable::printStudents(TreeNode<int, Student>* node, BinarySearchTree<
     cout<<"   Advisor Level: "<<facultyNode->getValue().getLevel()<<endl;
     cout<<"   Advisor department: "<<facultyNode->getValue().getDepartment()<<endl;
 
+    /*cout<<"   Advisor Advisees: "<<endl;
+
+    TreeNode<int, Student>* adviseeNode;
+
+    for (int i = 0; i < facultyNode->getValue().advisees->getSize(); i++) {
+
+      adviseeNode = find(facultyNode->getValue().advisees->findAt(i));
+
+      cout<<"------------------------------------------"<<endl;
+      cout<<"       Student ID: "<<adviseeNode->getKey()<<endl;
+      cout<<"       Student Name: "<<adviseeNode->getValue().getName()<<endl;
+      cout<<"       Student Level: "<<adviseeNode->getValue().getLevel()<<endl;
+      cout<<"       Student Major: "<<adviseeNode->getValue().getMajor()<<endl;
+      cout<<"       Student GPA: "<<adviseeNode->getValue().getStudentGPA()<<endl;
+      cout<<"------------------------------------------"<<endl;
+
+    }*/
+
     printStudents(node->right, tree);
+
+  }
+
+}
+
+void StudentTable::printFacultyInformationForASpecificStudent(BinarySearchTree<int, Faculty>& tree) {
+
+  cout<<"Enter the ID of the student you wish to see the Advisee information for."<<endl;
+  int userResponse;
+  cin>>userResponse;
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cin.ignore();
+    cout<<"Invalid Input: you need to enter an integer ID"<<endl;
+
+  }
+  else {
+
+    TreeNode<int, Student>* studentToPrintAdviseeInformationFor = find(userResponse);
+
+    if (studentToPrintAdviseeInformationFor != NULL) {
+
+      TreeNode<int, Faculty>* facultyToPrintInformationOf = tree.find(studentToPrintAdviseeInformationFor->getValue().getStudentAdvisorID());
+
+      if (facultyToPrintInformationOf != NULL) {
+
+        cout<<"Advisor ID: "<<facultyToPrintInformationOf->getValue().getPersonID()<<endl;
+        cout<<"Advisor Name: "<<facultyToPrintInformationOf->getValue().getName()<<endl;
+        cout<<"Advisor Level: "<<facultyToPrintInformationOf->getValue().getLevel()<<endl;
+        cout<<"Advisor department: "<<facultyToPrintInformationOf->getValue().getDepartment()<<endl;
+        cout<<"Advisor Advisees: "<<endl;
+
+        //TreeNode<int, Student>* studentAdviseeToPrintInfoOf;
+
+        for (int i = 0; i < facultyToPrintInformationOf->getValue().advisees->getSize(); i++) {
+
+          cout<<"------------------------------------------"<<endl;
+          studentToPrintAdviseeInformationFor = find(facultyToPrintInformationOf->getValue().advisees->findAt(i));
+          cout<<"   Student ID: "<<studentToPrintAdviseeInformationFor->getKey()<<endl;
+          cout<<"   Student Name: "<<studentToPrintAdviseeInformationFor->getValue().getName()<<endl;
+          cout<<"   Student Level: "<<studentToPrintAdviseeInformationFor->getValue().getLevel()<<endl;
+          cout<<"   Student Major: "<<studentToPrintAdviseeInformationFor->getValue().getMajor()<<endl;
+          cout<<"   Student GPA: "<<studentToPrintAdviseeInformationFor->getValue().getStudentGPA()<<endl;
+          cout<<"------------------------------------------"<<endl;
+
+        }
+
+      }
+
+    }
+    else {
+
+      cout<<"Sorry, but the student with the ID you entered does not exist in the current database."<<endl;
+
+    }
 
   }
 
@@ -85,11 +160,27 @@ void StudentTable::printASpecificStudent(BinarySearchTree<int, Faculty>& tree) {
 
       if (facultyNode != NULL) {
 
-        TreeNode<int, Faculty>* facultyNode = tree.find(studentNodeToPrintInformationOf->getValue().getStudentAdvisorID());
+        //TreeNode<int, Faculty>* facultyNode = tree.find(studentNodeToPrintInformationOf->getValue().getStudentAdvisorID());
         cout<<"   Advisor ID: "<<facultyNode->getValue().getPersonID()<<endl;
         cout<<"   Advisor Name: "<<facultyNode->getValue().getName()<<endl;
         cout<<"   Advisor Level: "<<facultyNode->getValue().getLevel()<<endl;
         cout<<"   Advisor department: "<<facultyNode->getValue().getDepartment()<<endl;
+
+        /*cout<<"   Advisor Advisees: "<<endl;
+        TreeNode<int, Student>* studentToPrintAdviseeInformationFor = find(userResponse);
+
+        for (int i = 0; i < facultyNode->getValue().advisees->getSize(); i++) {
+
+          cout<<"------------------------------------------"<<endl;
+          studentToPrintAdviseeInformationFor = find(facultyNode->getValue().advisees->findAt(i));
+          cout<<"       Student ID: "<<studentToPrintAdviseeInformationFor->getKey()<<endl;
+          cout<<"       Student Name: "<<studentToPrintAdviseeInformationFor->getValue().getName()<<endl;
+          cout<<"       Student Level: "<<studentToPrintAdviseeInformationFor->getValue().getLevel()<<endl;
+          cout<<"       Student Major: "<<studentToPrintAdviseeInformationFor->getValue().getMajor()<<endl;
+          cout<<"       Student GPA: "<<studentToPrintAdviseeInformationFor->getValue().getStudentGPA()<<endl;
+          cout<<"------------------------------------------"<<endl;
+
+        }*/
 
       }
 

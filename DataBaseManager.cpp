@@ -84,11 +84,13 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   }
   else if (response == 5) {
 
+    masterStudent.printFacultyInformationForASpecificStudent(masterFaculty);
     return false;
 
   }
   else if (response == 6) {
 
+    masterFaculty.printAdviseeInfoForSpecificFacultyMember(masterStudent);
     return false;
 
   }

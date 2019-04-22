@@ -24,6 +24,7 @@ public:
   void printStudents(TreeNode<int, Student>* node, BinarySearchTree<int, Faculty>& tree);
 
   void printASpecificStudent(BinarySearchTree<int, Faculty>& tree);
+  void printFacultyInformationForASpecificStudent(BinarySearchTree<int, Faculty>& tree);
 
   void readFromFileWithSpecificRules(std::string line);
 

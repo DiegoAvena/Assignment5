@@ -45,6 +45,7 @@ public:
 
   void printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& tree);
   void printASpecificFacultyMember(BinarySearchTree<int, Student>& tree);
+  void printAdviseeInfoForSpecificFacultyMember(BinarySearchTree<int, Student>& tree);
 
 };
 
