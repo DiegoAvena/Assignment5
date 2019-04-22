@@ -6,6 +6,7 @@
 #include "FileOutputManager.h"
 #include "FileInputManager.h"
 #include "DoubleLinkedList.h"
+#include "Student.h"
 
 class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable> {
 
@@ -42,7 +43,8 @@ public:
   void setNunberOfLineWhereNumberOfAdviseesWasAt(int numberOfLineWhereNumberOfAdviseesWasAt);
   void setNumberOfAdvisees(int numberOfAdvisees);
 
-  void printFaculty(TreeNode<int, Faculty>* node);
+  void printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& tree);
+  void printASpecificFacultyMember(BinarySearchTree<int, Student>& tree);
 
 };
 

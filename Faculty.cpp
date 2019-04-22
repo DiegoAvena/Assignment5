@@ -38,25 +38,17 @@ Faculty::~Faculty() {
 
 }
 
+const std::string& Faculty::getDepartment() const {
+
+  return department;
+
+}
+
 void Faculty::printAdviseeIds() const{
 
   advisees->printList();
 
 }
-
-/*const std::string& Faculty::getDepartment() const {
-
-  return department;
-
-}*/
-
-
-/*const DoubleLinkedList<unsigned int>* Faculty::getAdvisees() const {
-
-  return advisees;
-
-}*/
-
 
 void Faculty::addAdvisee(unsigned int IDOfAdviseeToAdd) {
 

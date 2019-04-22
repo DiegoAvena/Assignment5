@@ -1,3 +1,6 @@
+#ifndef TREE_NODE_H
+#define TREE_NODE_H
+
 #include <iostream>
 
 template <typename K, typename V>
@@ -65,3 +68,5 @@ public:
   }
 
 };
+
+#endif

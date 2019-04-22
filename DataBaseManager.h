@@ -3,6 +3,8 @@
 
 #include "StudentTable.h"
 #include "FacultyTable.h"
+#include "TreeNode.h"
+#include <iostream>
 
 class DataBaseManager {
 
@@ -10,18 +12,16 @@ private:
   StudentTable masterStudent;
   FacultyTable masterFaculty;
 
+  bool determineWhichCommandToCarryOut(int response);
+
+  void getRestOfInputForOptionThree();
+  void getRestOfInputForOptionFour();
+
+  int promptUserForAnID(std::string messageTellingUserWhatInputIsNeeded, bool searchForIDInMasterFaculty);
+
 public:
   DataBaseManager();
   ~DataBaseManager();
-
-  //void initializeMasterStudent();
-  //void initializeMasterFaculty();
-
-  //void initializeTree(int ID, Student student);
-  //void initializeTree(int ID, Faculty faculty);
-
-  void addToTable(int ID, Student student);
-  void addToTable(int ID, Faculty faculty);
 
   void presentMenuToUser();
 

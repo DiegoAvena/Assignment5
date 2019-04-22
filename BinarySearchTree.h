@@ -232,7 +232,7 @@ public:
 
     unsigned int depth = 0;
 
-    if (find(keyOfNodeToGetDepthOf)) {
+    if (find(keyOfNodeToGetDepthOf) != NULL) {
 
       //the node to get the depth of is in the tree:
       TreeNode<K, V>* node = root;
@@ -267,11 +267,11 @@ public:
 
   }
 
-  bool find(K keyOfNodeToFind) {
+  TreeNode<K, V>* find(K keyOfNodeToFind) {
 
     if (empty()) {
 
-      return false;
+      return NULL;
 
     }
     else {
@@ -295,14 +295,14 @@ public:
         else {
 
           //the node must have been found, return true:
-          return true;
+          return node;
 
         }
 
       }
 
       //the node was not found since the loop above went all the way to a leaf:
-      return false;
+      return NULL;
 
     }
 
@@ -466,7 +466,7 @@ public:
 
   void insert(K key, V value) throw(NodeAlreadyExistsInTreeException){
 
-    if (find(key)) {
+    if (find(key) != NULL) {
 
       //throw a node already exists in tree exception:
       throw NodeAlreadyExistsInTreeException("Exception: cannot put a node that already exists into tree");

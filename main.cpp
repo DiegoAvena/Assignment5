@@ -1,8 +1,9 @@
 #include <iostream>
 //#include "Student.h"
 //#include "Faculty.h"
-#include "FacultyTable.h"
-#include "StudentTable.h"
+//#include "FacultyTable.h"
+//#include "StudentTable.h"
+#include "DataBaseManager.h"
 
 using namespace std;
 
@@ -77,13 +78,16 @@ int main(int argc, char const *argv[]) {
 
   cout<<endl;
   */
-  FacultyTable facultyTable;
+
+  /*FacultyTable facultyTable;
   facultyTable.setUpTable(facultyTable);
   facultyTable.printFaculty(facultyTable.getRoot());
 
   StudentTable studentTable;
   studentTable.setUpTable(studentTable);
-  studentTable.printStudents(studentTable.getRoot());
-
+  studentTable.printStudents(studentTable.getRoot());*/
+  DataBaseManager dataBaseManager;
+  dataBaseManager.presentMenuToUser();
+  
   return 0;
 }

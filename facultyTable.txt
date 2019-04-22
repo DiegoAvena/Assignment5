@@ -2,15 +2,11 @@
 John Adams
 Lecturer
 CPSC
-4
+1
 2299333
-1100222
-8855444
-2233000
 4566999
 Abraham Lincoln
 Lecturer
 CPSC
-2
-1100111
-3351222
+1
+1100222
