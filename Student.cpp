@@ -12,11 +12,24 @@ Student::Student(std::string name, std::string level, std::string major, unsigne
   setPersonID(studentID);
   setAdvisorID(advisorID);
   setStudentGPA(studentGPA);
+  studentHasBeenAssignedToAnAdviseeAlready = false;
 
 }
 
 Student::~Student() {
 
+
+}
+
+bool Student::getStudentHasBeenAssignedToAnAdviseeAlready(){
+
+  return studentHasBeenAssignedToAnAdviseeAlready;
+
+}
+
+void Student::setStudentHasBeenAssignedToAnAdviseeAlready(bool studentHasBeenAssignedToAnAdviseeAlready){
+
+  this->studentHasBeenAssignedToAnAdviseeAlready = studentHasBeenAssignedToAnAdviseeAlready;
 
 }
 

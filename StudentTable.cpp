@@ -39,12 +39,8 @@ void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>*
     if ((treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())) == false) {
 
       //this student is assigned an advisor that does not exist in the faculty tree:
-      //std::cout<<"Student has an advisee that does not exist in the table!"<<endl;
       int randomNumber = rand() % treeToBaseReferenceOffOf.listOfIDSThatExistInTree.getSize();
-      //std::cout<<"Number of possible faculties this student can be set to: "<<treeToBaseReferenceOffOf.listOfIDSThatExistInTree.getSize()<<endl;
-      //std::cout<<"Setting student to faculty located at index "<<randomNumber<<" in the list!"<<endl;
       node->getValue().setAdvisorID(treeToBaseReferenceOffOf.listOfIDSThatExistInTree.findAt(randomNumber));
-      //cout<<node->getValue().getPersonID()<<endl;
 
       bool needToAddStudentToAdvisorsList = true;
       for (int i = 0; i < treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())->getValue().advisees->getSize(); i++) {
@@ -66,6 +62,8 @@ void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>*
 
     }
 
+    //by this point this student node has a valid advisee assigned to him or her, the line below signals that this is the case for this student node:
+    node->getValue().setStudentHasBeenAssignedToAnAdviseeAlready(true);
     initializeReferentialIntegrityOfTable(node->right, treeToBaseReferenceOffOf);
 
   }

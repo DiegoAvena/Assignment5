@@ -16,7 +16,7 @@ void DataBaseManager::presentMenuToUser() {
 
   masterStudent.initializeReferentialIntegrityOfTable(masterStudent.getRoot(), masterFaculty);
   masterFaculty.initializeReferentialIntegrityOfTable(masterFaculty.getRoot(), masterStudent);
-  
+
   while (true) {
 
     cout<<"DATABASE MAIN MENU"<<endl;
@@ -109,6 +109,7 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   }
   else if (response == 9) {
 
+    masterFaculty.AddAFacultyMember(masterStudent);
     return false;
 
   }

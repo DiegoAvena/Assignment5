@@ -13,6 +13,8 @@ private:
 
   double studentGPA;
 
+  bool studentHasBeenAssignedToAnAdviseeAlready;
+
 public:
   Student();
   Student(std::string name, std::string level, std::string major, unsigned int studentID, unsigned int advisorID, double studentGPA);
@@ -24,6 +26,9 @@ public:
   const std::string& getName() const;
   const std::string& getLevel() const;
   const std::string& getMajor() const;
+
+  bool getStudentHasBeenAssignedToAnAdviseeAlready();
+  void setStudentHasBeenAssignedToAnAdviseeAlready(bool studentHasBeenAssignedToAnAdviseeAlready);
 
   void setAdvisorID(unsigned int advisorID);
   void setStudentGPA(double studentGPA);

@@ -34,6 +34,135 @@ void FacultyTable::deleteListOfAdviseesForEachFaculty(TreeNode<int, Faculty>* no
 
 }
 
+void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference) {
+
+  //for info on cin.get(), I used: http://www.cplusplus.com/reference/istream/istream/get/
+  int IDOfNewFaculty;
+  char nameOfNewFaculty[256];
+  char levelOfNewFaculty[256];
+  char departmentOfNewFaculty[256];
+  int IDOfNewFacultyAdvisee;
+
+  cout<<"Enter the ID of the new faculty member you wish to add:"<<endl;
+  cin>>IDOfNewFaculty;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cout<<"Invalid Input: you must enter an integer ID for the faculty you are trying to add."<<endl;
+    return;
+
+  }
+
+  if (find(IDOfNewFaculty) != NULL) {
+
+    //there is a faculty member with this exact ID already in the tree: This faculty cannot be entered with this ID
+    cout<<"Sorry, but the ID you gave is already in use by another faculty in the current database."<<endl;
+    return;
+
+  }
+
+
+  cout<<"Enter the name of the new faculty member you wish to add: "<<endl;
+  cin.get(nameOfNewFaculty, 256);
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you did not enter a valid name for the new faculty you wish to add."<<endl;
+    cin.ignore();
+    cin.clear();
+    return;
+
+  }
+
+  cin.ignore();
+
+  cout<<"Enter the level of the new faculty member you wish to add: "<<endl;
+  cin.get(levelOfNewFaculty, 256);
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you did not enter a valid level for the new faculty you wish to add."<<endl;
+    cin.ignore();
+    cin.clear();
+    return;
+
+  }
+
+  cin.ignore();
+
+
+  cout<<"Enter the department of the new faculty member you wish to add: "<<endl;
+  cin.get(departmentOfNewFaculty, 256);
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you did not enter a valid department for the new faculty you wish to add."<<endl;
+    cin.ignore();
+    cin.clear();
+    return;
+
+  }
+
+  cin.ignore();
+
+  Faculty* newFacultyToAdd = new Faculty(nameOfNewFaculty, levelOfNewFaculty, departmentOfNewFaculty, IDOfNewFaculty);
+
+  while (true) {
+
+    cout<<"Enter a numerical ID for the Advisee you wish to add to this new faculty member, or you can enter -1 to stop and insert the faculty into the database."<<endl;
+    cin>>IDOfNewFacultyAdvisee;
+
+    if (cin.fail()) {
+
+      cin.clear();
+      cin.ignore();
+      cout<<"Invalid input: sorry, but the ID you enter must be an integer"<<endl;
+
+      delete newFacultyToAdd;
+      break;
+
+    }
+    else if (IDOfNewFacultyAdvisee < 0) {
+
+      insert(newFacultyToAdd->getPersonID(), *newFacultyToAdd);
+      listOfIDSThatExistInTree.addFront(newFacultyToAdd->getPersonID());
+
+      delete newFacultyToAdd;
+      cout<<"Faculty member added!"<<endl;
+      break;
+
+    }
+    else {
+
+      TreeNode<int, Student>* studentNode = studentTreeReference.find(IDOfNewFacultyAdvisee);
+
+      if (studentNode != NULL) {
+
+        //remove this advisee from their previous advisor since a student should not have 2 advisors
+        TreeNode<int, Faculty>* facultyToRemoveAdviseeFrom = find(studentNode->getValue().getStudentAdvisorID());
+        facultyToRemoveAdviseeFrom->getValue().removeAdvisee(studentNode->getKey());
+
+        //automatically reassigns this student to this new faculty member:
+        studentNode->getValue().setAdvisorID(newFacultyToAdd->getPersonID());
+        newFacultyToAdd->addAdvisee(studentNode->getValue().getPersonID());
+
+        cout<<"Student added to advisee list"<<endl;
+
+      }
+      else {
+
+        cout<<"Sorry, that ID you entered for the advisee is an ID for a student that does not exist in the current database"<<endl;
+
+      }
+
+    }
+
+  }
+
+}
+
 void FacultyTable::printASpecificFacultyMember(BinarySearchTree<int, Student>& tree) {
 
   //TreeNode<int, Faculty>* nodeToPrint = find(keyOfNodeToPrint);
@@ -342,6 +471,5 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
     currentLineNumber++;
 
   }
-
 
 }

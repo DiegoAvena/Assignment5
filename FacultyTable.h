@@ -52,7 +52,7 @@ public:
 
   void initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& treeToBaseReferenceOffOf);
 
-  //DoubleLinkedList<int> getAllFacultiesThatExistInTable();
+  void AddAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference);
 
 };
 
