@@ -5,6 +5,7 @@
 //#include "FacultyTable.h"
 //#include "StudentTable.h"
 #include "DataBaseManager.h"
+#include "DoubleLinkedList.h"
 
 using namespace std;
 
@@ -87,6 +88,7 @@ int main(int argc, char const *argv[]) {
   StudentTable studentTable;
   studentTable.setUpTable(studentTable);
   studentTable.printStudents(studentTable.getRoot());*/
+
   srand(time(NULL));
 
   DataBaseManager dataBaseManager;

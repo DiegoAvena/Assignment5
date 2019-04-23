@@ -53,14 +53,14 @@ public:
 
     while (currentNode != NULL) {
 
-      currentNode = currentNode->next;
-      currentPosition++;
-
       if (currentNode->element == data) {
 
         break;
 
       }
+
+      currentNode = currentNode->next;
+      currentPosition++;
 
     }
 

@@ -2,6 +2,8 @@
 
 using namespace std;
 
+//NOTE LINE 466: MIGHT BE A MEMORY LEAK! 
+
 FacultyTable::FacultyTable():BinarySearchTree(){
 
   facultyToAddToTable = new Faculty();

@@ -240,6 +240,114 @@ void StudentTable::printASpecificStudent(BinarySearchTree<int, Faculty>& tree) {
 
 }
 
+void StudentTable::addAStudent(FacultyTable& facultyTree) {
+
+  int IDOfNewStudentToAdd;
+  char nameOfNewStudentToAdd[256];
+  char levelOfNewStudentToAdd[256];
+  char majorOfNewStudentToAdd[256];
+  double GPAOfNewStudentToAdd;
+  int advisorIDOfNewStudentToAdd;
+
+  cout<<"Enter an integer for the ID of the student you wish to add:"<<endl;
+  cin>>IDOfNewStudentToAdd;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you must enter an integer for the student ID"<<endl;
+    cin.clear();
+    cin.ignore();
+    return;
+
+  }
+  else if (find(IDOfNewStudentToAdd) != NULL) {
+
+    //this ID is already in use by another student in the database:
+    cout<<"Sorry, but the ID you entered is already in use by another student in the current database"<<endl;
+    return;
+
+  }
+
+  cout<<"Enter the name of the new student you wish to add:"<<endl;
+  cin.get(nameOfNewStudentToAdd, 256);
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you failed to put a valid name for the student you wish to add"<<endl;
+    cin.clear();
+    return;
+
+  }
+
+  cout<<"Enter the level of the new student you wish to add:"<<endl;
+  cin.get(levelOfNewStudentToAdd, 256);
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you failed to put a valid level for the student you wish to add"<<endl;
+    cin.clear();
+    return;
+
+  }
+
+  cout<<"Enter the major of the new student you wish to add:"<<endl;
+  cin.get(majorOfNewStudentToAdd, 256);
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you failed to put a valid major for the student you wish to add"<<endl;
+    cin.clear();
+    return;
+
+  }
+
+  cout<<"Enter the GPA of the new student you wish to add:"<<endl;
+  cin>>GPAOfNewStudentToAdd;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you failed to put a valid GPA for the student you wish to add"<<endl;
+    cin.clear();
+    return;
+
+  }
+
+  cout<<"Enter the advisor ID of the new student you wish to add:"<<endl;
+  cin>>advisorIDOfNewStudentToAdd;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cout<<"Invalid Input: you failed to put a valid advisor ID for the student you wish to add"<<endl;
+    cin.clear();
+    return;
+
+  }
+
+  //maintain referential integrity:
+  if (facultyTree.listOfIDSThatExistInTree.find(advisorIDOfNewStudentToAdd) == -1) {
+
+    //this student has been given a faculty that does not actually exist in the current database, assign them to a random faculty member:
+    int randomNumber = rand() % facultyTree.listOfIDSThatExistInTree.getSize();
+    advisorIDOfNewStudentToAdd = facultyTree.listOfIDSThatExistInTree.findAt(randomNumber);
+
+    //tell the advisor that they have been assigned to this student as an advisor:
+    cout<<"STUDENT SET TO ADVISOR WITH ID: "<<advisorIDOfNewStudentToAdd<<endl;
+    facultyTree.find(advisorIDOfNewStudentToAdd)->getValue().advisees->addFront(IDOfNewStudentToAdd);
+
+  }
+
+  Student newStudentToAdd(nameOfNewStudentToAdd, levelOfNewStudentToAdd, majorOfNewStudentToAdd, IDOfNewStudentToAdd, advisorIDOfNewStudentToAdd, GPAOfNewStudentToAdd);
+  insert(newStudentToAdd.getPersonID(), newStudentToAdd);
+
+}
+
+
 void StudentTable::readFromFileWithSpecificRules(std::string line) {
 
   //Student studentToAddToTable;

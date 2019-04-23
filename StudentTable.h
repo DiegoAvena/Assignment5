@@ -38,6 +38,8 @@ public:
 
   void readFromFileWithSpecificRules(std::string line);
 
+  void addAStudent(FacultyTable&  facultyTree);
+
 };
 
 #endif

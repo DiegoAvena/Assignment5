@@ -99,6 +99,7 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   }
   else if (response == 7) {
 
+    masterStudent.addAStudent(masterFaculty);
     return false;
 
   }
