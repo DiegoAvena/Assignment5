@@ -3,18 +3,21 @@
 
 #include "BinarySearchTree.h"
 #include "Faculty.h"
-#include "FileOutputManager.h"
 #include "FileInputManager.h"
 #include "DoubleLinkedList.h"
 #include "Student.h"
 #include "DoubleLinkedList.h"
+#include <fstream>
+#include "FileOutputManager.h"
 #include <stdlib.h> // for access to the rand method
 #include <cstdlib> //for access to RAND_MAX constant
+#include <iostream>
 
-class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable> {
+class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable>, public FileOutputManager<FacultyTable> {
 
 private:
-  FileOutputManager fileOutputer;
+  //FileOutputManager fileOutputer;
+  //std::ofstream* serializer;
   Faculty* facultyToAddToTable;
 
   //for filling this table up from a text file:
@@ -23,9 +26,7 @@ private:
   int numberOfLineWhereNumberOfAdviseesWasAt;
   int numberOfAdvisees;
 
-
 public:
-
   DoubleLinkedList<int> listOfIDSThatExistInTree;
 
   FacultyTable();
@@ -57,6 +58,8 @@ public:
   void AddAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference);
   void removeAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference);
   void removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeReference);
+
+  void writeToFileUsingSpecficRules(std::ofstream* fileToWriteTo, TreeNode<int, Faculty>* node);
 
 };
 

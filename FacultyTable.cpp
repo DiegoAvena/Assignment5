@@ -7,10 +7,34 @@ using namespace std;
 FacultyTable::FacultyTable():BinarySearchTree(){
 
   facultyToAddToTable = new Faculty();
-  //listOfFacultyToDelete = new DoubleLinkedList<Faculty>();
-
   currentLineNumber = 1;
   numberOfFirstLineForDataSet = 1;
+
+}
+
+void FacultyTable::writeToFileUsingSpecficRules(ofstream* fileToWriteTo, TreeNode<int, Faculty>* node) {
+
+  //serializer = new ofstream("facultyTable.txt");
+  if (node != NULL) {
+
+    writeToFileUsingSpecficRules(fileToWriteTo, node->left);
+
+    *fileToWriteTo <<node->getValue().getPersonID()<<endl; //write the ID of this faculty
+    *fileToWriteTo <<node->getValue().getName()<<endl; //write the name of the faculty
+    *fileToWriteTo <<node->getValue().getLevel()<<endl; //write the level of the faculty
+    *fileToWriteTo <<node->getValue().getDepartment()<<endl; //write the department of the faculty
+    *fileToWriteTo <<node->getValue().advisees->getSize()<<endl; //write the amount of advisees this faculty has
+
+    //write all of the Advisee IDs down for this faculty member:
+    for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
+
+      *fileToWriteTo<<node->getValue().advisees->findAt(i)<<endl;
+
+    }
+
+    writeToFileUsingSpecficRules(fileToWriteTo, node->right);
+
+  }
 
 }
 
@@ -21,6 +45,7 @@ FacultyTable::~FacultyTable(){
   //delete facultyToAddToTable;
   //cout<<"Delete anything for the faculty table"<<endl;
   deleteListOfAdviseesForEachFaculty(root);
+  //delete serializer;
 
 }
 
@@ -236,7 +261,7 @@ void FacultyTable::printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<i
     cout<<"Faculty Advisee Info: "<<endl;
 
     for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
-
+      cout<<"List size: "<<node->getValue().advisees->getSize()<<endl;
       TreeNode<int, Student>* adviseeNode = tree.find(node->getValue().advisees->findAt(i));
 
       if (node != NULL) {
@@ -361,29 +386,38 @@ void FacultyTable::initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>*
 
     initializeReferentialIntegrityOfTable(node->left, treeToBaseReferenceOffOf);
 
+    DoubleLinkedList<int> listOfAdviseesToRemove;
+    int numberOfAdviseesToRemove = 0;
+
     for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
+
+      cout<<"Checking for fake advisee"<<endl;
 
       if (treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i)) == NULL) {
 
         //the faculty has an advisee that does not exist in the student table:
-        node->getValue().advisees->removeAt(i);
+        cout<<"Removing fake advisee"<<endl;
+        listOfAdviseesToRemove.addFront(node->getValue().advisees->findAt(i));
 
       }
       else if (treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i))->getValue().getStudentAdvisorID() != node->getValue().getPersonID()) {
 
-        //the faculty has an advisee that does exist in the student table, but this student has already been assigned to a different faculty member:
         cout<<"This student has a different faculty assigned to them already!"<<endl;
-        node->getValue().advisees->removeAt(i);
+        listOfAdviseesToRemove.addFront(node->getValue().advisees->findAt(i));
 
       }
-      /*else if (((treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i))->getValue().getStudentAdvisorID()) == (node->getValue().getPersonID())) &&
-      (node->getValue().advisees->find(treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i))->getValue().getPersonID()))) {
-
-        //the
-
-      }*/
 
     }
+
+    cout<<"setting referential integrity"<<endl;
+
+    for (int i = 0; i < listOfAdviseesToRemove.getSize(); i++) {
+
+      node->getValue().advisees->remove(listOfAdviseesToRemove.findAt(i));
+
+    }
+
+    cout<<"referential integrity set!"<<endl;
 
     initializeReferentialIntegrityOfTable(node->right, treeToBaseReferenceOffOf);
 
@@ -539,27 +573,32 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
 void FacultyTable::readFromFileWithSpecificRules(string line) {
 
   //std::cout<<objectToBuildUsingTheTextFile.getCurrentLineNumber()<<std::endl;
+  //cout<<"Creating faculty..."<<endl;
   if (currentLineNumber == 1) {
 
     //this is the faculty's id
+    //cout<<"Faculty ID"<<endl;
     facultyToAddToTable->setPersonID(stoi(line));
 
   }
   else if (currentLineNumber == 2) {
 
     //this is the faculty's name
+    //cout<<"Faculty name"<<endl;
     facultyToAddToTable->setName(line);
 
   }
   else if (currentLineNumber == 3) {
 
     //this is the faculty's level
+    //cout<<"Faculty level"<<endl;
     facultyToAddToTable->setLevel(line);
 
   }
   else if (currentLineNumber == 4) {
 
     //this is the faculty's department
+    //cout<<"faculty department"<<endl;
     facultyToAddToTable->setDepartment(line);
 
 
@@ -568,18 +607,21 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
 
     //this is the line that contains the number of numberOfAdvisees this faculty has:
     //std::cout<<"Faculty ID: "<<stoi(line)<<std::endl;
+    //cout<<"Number of advisees"<<endl;
     numberOfAdvisees = stoi(line);
 
   }
   else if ((currentLineNumber - 5) <= numberOfAdvisees) {
 
     //this line has the id of a advisee
+    //cout<<"Adding advisee"<<endl;
     facultyToAddToTable->addAdvisee(stoi(line));
 
   }
 
   if (((currentLineNumber - 5) == numberOfAdvisees)) {
 
+    //cout<<"Adding faculty..."<<endl;
     //we were on the last line representing data for this faculty, the object is now ready to be added into the tree, and everything should be reset for next faculty:
     //std::cout<<currentLineNumber<<std::endl;
 
@@ -588,7 +630,7 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
     currentLineNumber = 1;
     numberOfAdvisees = 0;
     //objectToBuildUsingTheTextFile.setNumberOfAdvisees(0);
-    //std::cout<<"Number of Advisees: "<<facultyToAddToTable->advisees->getSize()<<std::endl;
+    std::cout<<"Number of Advisees: "<<facultyToAddToTable->advisees->getSize()<<std::endl;
 
     int arrayOfAdvisees[facultyToAddToTable->advisees->getSize()];
 
@@ -604,6 +646,8 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
     //delete facultyToAddToTable->advisees;
     delete facultyToAddToTable;
     facultyToAddToTable = new Faculty();
+
+    //cout<<"Faculty added!"<<endl;
 
   }
   else {

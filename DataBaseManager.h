@@ -5,12 +5,14 @@
 #include "FacultyTable.h"
 #include "TreeNode.h"
 #include <iostream>
+//#include "FileOutputManager.h"
 
 class DataBaseManager {
 
 private:
   StudentTable masterStudent;
   FacultyTable masterFaculty;
+  //FileOutputManager<FacultyTable> fileOutputer;
 
   bool determineWhichCommandToCarryOut(int response);
 

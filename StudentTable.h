@@ -3,7 +3,7 @@
 
 #include "BinarySearchTree.h"
 #include "Student.h"
-#include "FileOutputManager.h"
+#include <fstream>
 #include "FileInputManager.h"
 #include "Faculty.h"
 #include <stdlib.h> // for access to the rand method
@@ -15,7 +15,7 @@
 class StudentTable: public BinarySearchTree<int, Student>, public FileInputManager<StudentTable> {
 
 private:
-  FileOutputManager fileOutputer;
+  //FileOutputManager fileOutputer;
   int currentLineNumber;
   int numberOfFirstLineForDataSet;
   Student studentToAddToTable;

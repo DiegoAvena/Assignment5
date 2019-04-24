@@ -15,6 +15,7 @@ void DataBaseManager::presentMenuToUser() {
   masterFaculty.setUpTable(masterFaculty);
 
   masterStudent.initializeReferentialIntegrityOfTable(masterStudent.getRoot(), masterFaculty);
+  //masterFaculty.getRoot();
   masterFaculty.initializeReferentialIntegrityOfTable(masterFaculty.getRoot(), masterStudent);
 
   while (true) {
@@ -148,6 +149,8 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   else if (response == 14) {
 
     //exit and save both tables to the text file
+    masterFaculty.writeToFile(masterFaculty, "facultyTable.txt");
+    //fileOutputer.writeToFile(masterFaculty, "facultyTable.txt");
     cout<<"GOODBYE"<<endl;
     return true;
 
