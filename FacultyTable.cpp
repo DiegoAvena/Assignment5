@@ -2,7 +2,7 @@
 
 using namespace std;
 
-//NOTE LINE 466: MIGHT BE A MEMORY LEAK! 
+//NOTE LINE 466: MIGHT BE A MEMORY LEAK!
 
 FacultyTable::FacultyTable():BinarySearchTree(){
 
@@ -395,6 +395,62 @@ void FacultyTable::initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>*
 void FacultyTable::setUpTable(FacultyTable& objectToBuildUsingTheTextFile) {
 
   readFile("facultyTable.txt", objectToBuildUsingTheTextFile);
+
+}
+
+void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference) {
+
+  int IDOfFacultyToRemove;
+  cout<<"Enter the ID of the faculty member you wish to remove from the database"<<endl;
+  cin>>IDOfFacultyToRemove;
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cout<<"Invalid Input: You must enter an integer for the ID of the faculty you wish to remove"<<endl;
+    return;
+
+  }
+  else {
+
+    TreeNode<int, Faculty>* facultyNodeToRemove = find(IDOfFacultyToRemove);
+
+    if (facultyNodeToRemove != NULL) {
+
+      //remove the ID of the faculty that is about to be deleted from the list of faculty IDs currently in the tree
+      listOfIDSThatExistInTree.remove(IDOfFacultyToRemove);
+
+      //Reassign each of the advisees for this faculty member to a new advisor
+      if (listOfIDSThatExistInTree.empty() == false) {
+
+        //there are still faculties that can be assigned to the advisees of this faculty
+        for (int i = 0; i < facultyNodeToRemove->getValue().advisees->getSize(); i++) {
+
+          int IDOfAdviseeToReassign = facultyNodeToRemove->getValue().advisees->findAt(i);
+
+          int randomNumber = rand() % listOfIDSThatExistInTree.getSize(); //randomly reassign:
+          studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(listOfIDSThatExistInTree.findAt(randomNumber));
+
+          //tell the advisor being assigned to this new advisee that they have been assigned to this new advisee:
+          int IDOfAdvisorToAssignAdviseeTo = listOfIDSThatExistInTree.findAt(randomNumber);
+          find(IDOfAdvisorToAssignAdviseeTo)->getValue().addAdvisee(IDOfAdviseeToReassign);
+
+        }
+
+      }
+
+      //erase the faculty from the tree
+      erase(IDOfFacultyToRemove);
+
+    }
+    else {
+
+      cout<<"Sorry, but the ID of the faculty member you wish to remove does not exist in the currrent database"<<endl;
+      return;
+
+    }
+
+  }
 
 }
 

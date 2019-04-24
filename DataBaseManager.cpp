@@ -39,7 +39,7 @@ void DataBaseManager::presentMenuToUser() {
     cin>>userResponse;
 
     cout<<masterStudent.empty()<<endl;
-    
+
     if (cin.fail()) {
 
       cin.clear();
@@ -121,6 +121,7 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   else if (response == 10) {
 
     //delete a faculty given their ID
+    masterFaculty.removeAFacultyMember(masterStudent);
     return false;
 
   }

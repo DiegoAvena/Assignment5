@@ -8,6 +8,8 @@
 #include "DoubleLinkedList.h"
 #include "Student.h"
 #include "DoubleLinkedList.h"
+#include <stdlib.h> // for access to the rand method
+#include <cstdlib> //for access to RAND_MAX constant
 
 class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable> {
 
@@ -53,6 +55,7 @@ public:
   void initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& treeToBaseReferenceOffOf);
 
   void AddAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference);
+  void removeAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference);
 
 };
 
