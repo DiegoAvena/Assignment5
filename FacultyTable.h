@@ -56,6 +56,7 @@ public:
 
   void AddAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference);
   void removeAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference);
+  void removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeReference);
 
 };
 

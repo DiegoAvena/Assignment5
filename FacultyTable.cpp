@@ -391,6 +391,87 @@ void FacultyTable::initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>*
 
 }
 
+void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeReference) {
+
+  int IDOfFacultyToRemoveAdviseeFor;
+  int IDOfAdviseeToRemove;
+
+  //get the ID of the faculty the user wishes to remove an advisee for:
+  cout<<"Enter the ID for the faculty you wish to remove an advisee from"<<endl;
+
+  cin>>IDOfFacultyToRemoveAdviseeFor;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cout<<"Invalid Input: You must enter an integer ID for the Faculty you wish to remove an advisee for"<<endl;
+    return;
+
+  }
+
+  TreeNode<int, Faculty>* facultyToRemoveAdviseeFor = find(IDOfFacultyToRemoveAdviseeFor);
+  if (facultyToRemoveAdviseeFor == NULL) {
+
+    cout<<"Sorry, but the ID you gave is the ID of a faculty member that does not exist in the current database."<<endl;
+    return;
+
+  }
+
+  //get the ID of the advisee the the user wishes to remove:
+  cout<<"Enter the ID for the advisee you wish to remove from this faculty:"<<endl;
+  cin>>IDOfAdviseeToRemove;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cout<<"Invalid Input: You need to enter an integer ID for the advisee you wish to remove from this faculty member"<<endl;
+    return;
+
+  }
+
+  TreeNode<int, Student>* adviseeToRemove = studentTreeReference.find(IDOfAdviseeToRemove);
+  if (adviseeToRemove == NULL) {
+
+    cout<<"Sorry, but the ID you inserted is the ID of a student that does not exist in the current database"<<endl;
+    return;
+
+  }
+
+  //check that the advisee the user wishes to remove from this faculty member is actually assigned to this faculty member:
+  if (facultyToRemoveAdviseeFor->getValue().advisees->find(IDOfAdviseeToRemove) == -1) {
+
+    //this advisee is not assigned to this faculty member:
+    cout<<"Sorry, but teh advisee you wish to remove from this faculty member is not assigned to this faculty member."<<endl;
+    return;
+
+  }
+
+  //Remove this advisee from this faculty member:
+  facultyToRemoveAdviseeFor->getValue().advisees->remove(IDOfAdviseeToRemove);
+
+  //automatically assign this advisee to another advisor:
+  while (true) {
+
+    int randomNumber = rand() % listOfIDSThatExistInTree.getSize();
+    if (listOfIDSThatExistInTree.findAt(randomNumber) != IDOfFacultyToRemoveAdviseeFor) {
+
+      //this is an advisor that is not the advisor the student was just removed from, assign them to this advisor:
+      adviseeToRemove->getValue().setAdvisorID(listOfIDSThatExistInTree.findAt(randomNumber));
+
+      //tell the new advisor that they have been assigned to this student as an advisor:
+      find(adviseeToRemove->getValue().getStudentAdvisorID())->getValue().advisees->addFront(IDOfAdviseeToRemove);
+
+      break;
+
+    }
+
+  }
+
+  cout<<"Advisee removed and automatically reassigned to advisor with ID "<<adviseeToRemove->getValue().getStudentAdvisorID()<<endl;
+
+}
 
 void FacultyTable::setUpTable(FacultyTable& objectToBuildUsingTheTextFile) {
 

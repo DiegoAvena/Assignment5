@@ -135,6 +135,7 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   else if (response == 12) {
 
     //remove an advisee from a faculty member given the IDs
+    masterFaculty.removeAnAdvisee(masterStudent);
     return false;
 
   }

@@ -21,7 +21,6 @@ StudentTable::~StudentTable() {
 
   //output the contents of each node in this table to the text file, and than allow the base constructor to delete the tree:
 
-
 }
 
 void StudentTable::setUpTable(StudentTable& studentTableToBuild) {
