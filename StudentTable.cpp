@@ -29,6 +29,26 @@ void StudentTable::setUpTable(StudentTable& studentTableToBuild) {
 
 }
 
+void StudentTable::writeToFileUsingSpecficRules(std::ofstream* fileToWriteTo, TreeNode<int, Student>* node) {
+
+  if (node != NULL) {
+
+    writeToFileUsingSpecficRules(fileToWriteTo, node->left);
+
+    *fileToWriteTo<<node->getValue().getPersonID()<<endl;
+    *fileToWriteTo<<node->getValue().getName()<<endl;
+    *fileToWriteTo<<node->getValue().getLevel()<<endl;
+    *fileToWriteTo<<node->getValue().getMajor()<<endl;
+    *fileToWriteTo<<node->getValue().getStudentAdvisorID()<<endl;
+    *fileToWriteTo<<node->getValue().getStudentGPA()<<endl;
+
+    writeToFileUsingSpecficRules(fileToWriteTo, node->right);
+
+  }
+
+}
+
+
 void StudentTable::changeStudentsAdvisor(FacultyTable& facultyTree) {
 
   int IDOfStudentToChangeAdvisorOf;

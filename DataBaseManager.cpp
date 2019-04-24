@@ -150,6 +150,7 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
 
     //exit and save both tables to the text file
     masterFaculty.writeToFile(masterFaculty, "facultyTable.txt");
+    masterStudent.writeToFile(masterStudent, "studentTable.txt");
     //fileOutputer.writeToFile(masterFaculty, "facultyTable.txt");
     cout<<"GOODBYE"<<endl;
     return true;

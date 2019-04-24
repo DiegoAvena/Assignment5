@@ -12,7 +12,7 @@
 #include "FacultyTable.h"
 #include <iostream>
 
-class StudentTable: public BinarySearchTree<int, Student>, public FileInputManager<StudentTable> {
+class StudentTable: public BinarySearchTree<int, Student>, public FileInputManager<StudentTable>, public FileOutputManager<StudentTable> {
 
 private:
   //FileOutputManager fileOutputer;
@@ -41,6 +41,7 @@ public:
   void addAStudent(FacultyTable&  facultyTree);
   void removeAStudent(FacultyTable& facultyTree);
   void changeStudentsAdvisor(FacultyTable& facultyTree);
+  void writeToFileUsingSpecficRules(std::ofstream* fileToWriteTo, TreeNode<int, Student>* node);
 
 };
 
