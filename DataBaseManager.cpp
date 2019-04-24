@@ -128,6 +128,7 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   else if (response == 11) {
 
     //change a student's advisor given the student ID and the new faculty ID
+    masterStudent.changeStudentsAdvisor(masterFaculty);
     return false;
 
   }

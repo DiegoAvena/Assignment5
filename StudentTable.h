@@ -40,6 +40,7 @@ public:
 
   void addAStudent(FacultyTable&  facultyTree);
   void removeAStudent(FacultyTable& facultyTree);
+  void changeStudentsAdvisor(FacultyTable& facultyTree);
 
 };
 

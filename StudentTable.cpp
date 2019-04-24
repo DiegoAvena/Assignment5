@@ -30,6 +30,74 @@ void StudentTable::setUpTable(StudentTable& studentTableToBuild) {
 
 }
 
+void StudentTable::changeStudentsAdvisor(FacultyTable& facultyTree) {
+
+  int IDOfStudentToChangeAdvisorOf;
+  int IDOfFacultyToChangeStudentAdvisorTo;
+
+  //Ask user for the ID of which student they want to reassign the advisor of
+  cout<<"Enter the ID of the student you wish to change the advisor of:"<<endl;
+  cin>>IDOfStudentToChangeAdvisorOf;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cout<<"Invalid Input: you must enter an integer for the ID of the student you wish to change the advisor of"<<endl;
+    return;
+
+  }
+
+  TreeNode<int, Student>* studentToChangeAdvisorFor = find(IDOfStudentToChangeAdvisorOf);
+  if (studentToChangeAdvisorFor == NULL) {
+
+    cout<<"Sorry, but the ID you entered is an ID for a student that does not exist in the current database."<<endl;
+    return;
+
+  }
+
+  //Ask the user for the ID of the faculty member they want to reassign this student to:
+  cout<<"Enter the ID of the faculty member you wish to assign this student to: "<<endl;
+  cin>>IDOfFacultyToChangeStudentAdvisorTo;
+  cin.ignore();
+
+  if (cin.fail()) {
+
+    cin.clear();
+    cout<<"Invalid Input: You need to enter an integer ID for the faculty member you wish to reassign this student to"<<endl;
+    return;
+
+  }
+
+  TreeNode<int, Faculty>* facultyToAssignThisStudentTo = facultyTree.find(IDOfFacultyToChangeStudentAdvisorTo);
+  if (facultyToAssignThisStudentTo == NULL) {
+
+    cout<<"Sorry, but the ID you entered is the ID of a faculty member that does not exist in the current database"<<endl;
+    return;
+
+  }
+
+  //make sure this faculty is not already assigned to this student:
+  if (facultyToAssignThisStudentTo->getValue().advisees->find(IDOfStudentToChangeAdvisorOf) != -1) {
+
+    cout<<"The faculty member you chose to reassign this student to is already assigned to this student."<<endl;
+    return;
+
+  }
+
+  ////Tell the previous advisor that they are no longer the advisor for this student:
+  facultyTree.find(studentToChangeAdvisorFor->getValue().getStudentAdvisorID())->getValue().advisees->remove(studentToChangeAdvisorFor->getValue().getPersonID());
+
+  //Perform the switch:
+  studentToChangeAdvisorFor->getValue().setAdvisorID(IDOfFacultyToChangeStudentAdvisorTo);
+
+  //tell the new advisor that they are now assigned to this student as an advisor:
+  facultyTree.find(IDOfFacultyToChangeStudentAdvisorTo)->getValue().advisees->addFront(IDOfStudentToChangeAdvisorOf);
+
+  cout<<"Student advisor has been changed"<<endl;
+
+}
+
 void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>* node, FacultyTable& treeToBaseReferenceOffOf) {
 
   if (node != NULL) {
@@ -246,7 +314,7 @@ void StudentTable::removeAStudent(FacultyTable& facultyTree) {
   cout<<"Enter the ID of the student you wish to remove from the current database"<<endl;
   cin>>IDOfStudentToRemove;
   cin.ignore();
-  
+
   if (cin.fail()) {
 
     cin.clear();

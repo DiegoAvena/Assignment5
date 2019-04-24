@@ -440,6 +440,7 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
       }
 
       //erase the faculty from the tree
+      cout<<"Faculty member removed from database."<<endl;
       erase(IDOfFacultyToRemove);
 
     }
