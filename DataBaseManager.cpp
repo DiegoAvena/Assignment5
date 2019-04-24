@@ -38,6 +38,8 @@ void DataBaseManager::presentMenuToUser() {
     int userResponse;
     cin>>userResponse;
 
+    cout<<masterStudent.empty()<<endl;
+    
     if (cin.fail()) {
 
       cin.clear();
@@ -105,6 +107,8 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   }
   else if (response == 8) {
 
+    //delete a student given the student ID
+    masterStudent.removeAStudent(masterFaculty);
     return false;
 
   }
@@ -116,26 +120,31 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   }
   else if (response == 10) {
 
+    //delete a faculty given their ID
     return false;
 
   }
   else if (response == 11) {
 
+    //change a student's advisor given the student ID and the new faculty ID
     return false;
 
   }
   else if (response == 12) {
 
+    //remove an advisee from a faculty member given the IDs
     return false;
 
   }
   else if (response == 13) {
 
+    //rollback
     return false;
 
   }
   else if (response == 14) {
 
+    //exit and save both tables to the text file
     cout<<"GOODBYE"<<endl;
     return true;
 

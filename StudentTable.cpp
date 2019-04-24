@@ -240,6 +240,41 @@ void StudentTable::printASpecificStudent(BinarySearchTree<int, Faculty>& tree) {
 
 }
 
+void StudentTable::removeAStudent(FacultyTable& facultyTree) {
+
+  int IDOfStudentToRemove;
+  cout<<"Enter the ID of the student you wish to remove from the current database"<<endl;
+  cin>>IDOfStudentToRemove;
+  cin.ignore();
+  
+  if (cin.fail()) {
+
+    cin.clear();
+    cout<<"Invalid Input: You must enter an integer ID for the student you wish to remove from the current database"<<endl;
+    return;
+
+  }
+
+  TreeNode<int, Student>* studentToRemove = find(IDOfStudentToRemove);
+  if (studentToRemove != NULL) {
+
+    //find the advisor of this student to remove this student from their advisee list so that referential integrity is maintained:
+    TreeNode<int, Faculty>* advisorOfThisStudent = facultyTree.find(studentToRemove->getValue().getStudentAdvisorID());
+    advisorOfThisStudent->getValue().advisees->remove(IDOfStudentToRemove);
+
+    //remove this student from the student table:
+    erase(IDOfStudentToRemove);
+
+  }
+  else {
+
+    cout<<"Sorry, but you entered the ID of a student that does not exist in the current database."<<endl;
+    return;
+
+  }
+
+}
+
 void StudentTable::addAStudent(FacultyTable& facultyTree) {
 
   int IDOfNewStudentToAdd;

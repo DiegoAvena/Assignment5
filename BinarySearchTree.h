@@ -388,7 +388,7 @@ public:
           //case 2: the node to be deleted has a left child:
           if (nodeToDelete == root) {
 
-            root = nodeToDelete->right;
+            root = nodeToDelete->left;
 
           }
           else if (nodeToDeleteIsALeftChild) {

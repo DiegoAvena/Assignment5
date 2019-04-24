@@ -39,6 +39,7 @@ public:
   void readFromFileWithSpecificRules(std::string line);
 
   void addAStudent(FacultyTable&  facultyTree);
+  void removeAStudent(FacultyTable& facultyTree);
 
 };
 
