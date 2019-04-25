@@ -288,22 +288,28 @@ public:
     }
     else if (dataToRemoveFromList == front->element) {
 
+      std::cout<<"Removing front of list"<<std::endl;
+      std::cout<<"Deleting node with element: "<<front->element<<std::endl;
       removeFront();
 
     }
     else if (dataToRemoveFromList == back->element) {
 
+      std::cout<<"Removing back of list"<<std::endl;
+      std::cout<<"Deleting node with element: "<<back->element<<std::endl;
       removeBack();
 
     }
     else {
 
+      std::cout<<"Removing in between list"<<std::endl;
       DoubleLinkedListNode<dataType>* currentNode = front;
 
       while (currentNode != NULL) {
 
         if (currentNode->element == dataToRemoveFromList) {
 
+          std::cout<<"Deleting node with element: "<<currentNode->element<<std::endl;
           break;
 
         }
@@ -317,9 +323,10 @@ public:
 
       if (currentNode != NULL) {
 
-        currentNode->previous = currentNode->next;
+        currentNode->previous->next = currentNode->next;
         currentNode->next->previous = currentNode->previous;
 
+        std::cout<<"About to delete node with element: "<<currentNode->element<<std::endl;
         delete currentNode;
         listSize--;
 

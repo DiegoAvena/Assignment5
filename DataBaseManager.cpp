@@ -116,7 +116,7 @@ void DataBaseManager::checkIfCommandChangedStructureOfDatabase() {
 bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   //SnapShotContainer(StudentTable* previousStudentTable, FacultyTable* previousFacultyTable);
   snapShotContainer = new SnapShotContainer(masterStudent, masterFaculty);
-
+  cout<<"Master faculty tree in snapshot container has a list of advisees of size: "<<snapShotContainer->getPreviousFacultyTable()->listOfIDSThatExistInTree->getSize()<<endl;
   if (response == 1) {
 
     masterStudent->printStudents(masterStudent->getRoot(), *masterFaculty);
@@ -233,6 +233,14 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
         cout<<"PREVIOUS TABLES AQQUIRED!"<<endl;
 
         //delete the tables that have the changes the user is trying to undo:
+        cout<<newFacultyTable->listOfIDSThatExistInTree->getSize()<<endl;
+
+        for (int i = 0; i < masterFaculty->listOfIDSThatExistInTree->getSize(); i++) {
+
+          cout<<masterFaculty->listOfIDSThatExistInTree->findAt(i)<<endl;
+
+        }
+
         delete masterFaculty; //Calling this right after removing a faculty causes a seg fault where the listOfIDSThatExistInTree was never allocated
         delete masterStudent;
 

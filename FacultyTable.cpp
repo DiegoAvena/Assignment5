@@ -97,7 +97,7 @@ FacultyTable::~FacultyTable(){
 
   //delete facultyToAddToTable;
   cout<<"Delete anything for the faculty table"<<endl;
-  //delete listOfIDSThatExistInTree; //causes a seg fault when we try to rollback from a removeFacultyCommand
+  delete listOfIDSThatExistInTree; //causes a seg fault when we try to rollback from a removeFacultyCommand
 
   deleteListOfAdviseesForEachFaculty(root);
   //delete serializer;
@@ -591,7 +591,18 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
 
       //remove the ID of the faculty that is about to be deleted from the list of faculty IDs currently in the tree
       cout<<"REMOVING FACULTY..."<<endl;
-      listOfIDSThatExistInTree->remove(IDOfFacultyToRemove);
+      cout<<"REMOVING FACULTY WITH ID: "<<IDOfFacultyToRemove<<endl;
+      listOfIDSThatExistInTree->remove(IDOfFacultyToRemove); //ERROR: THIS IS NOT REMOVING THE RIGHT THING: in betweeen deletion does not work!!!
+      cout<<"IDS LEFT IN LIST OF IDS THAT EXIST IN TREE ARE: "<<endl;
+
+      /*for (int i = 0; i < listOfIDSThatExistInTree->getSize(); i++) {
+
+        cout<<listOfIDSThatExistInTree->findAt(i)<<endl;
+
+      }*/
+      listOfIDSThatExistInTree->printList();
+
+
       cout<<"REASSIGNING ADVISEES IF HE OR SHE HAS ANY..."<<endl;
 
       //Reassign each of the advisees for this faculty member to a new advisor
