@@ -19,13 +19,19 @@ private:
   int currentLineNumber;
   int numberOfFirstLineForDataSet;
   Student studentToAddToTable;
+  void traverseTreeToCopyIt(TreeNode<int, Student>* node);
+  bool commandModifiedTableSuccessfully;
 
 public:
 
   //DoubleLinkedList<int> facultyIDs;
-
+  bool getCommandModifiedTableSuccessfully();
+  void setCommandModifiedTableSuccessfully(bool commandModifiedTableSuccessfully);
+  
   StudentTable();
   StudentTable(int rootKey, Student rootValue);
+  StudentTable(StudentTable& tableToCopy);
+
   ~StudentTable();
 
   void setUpTable(StudentTable& studentTableToBuild);

@@ -5,14 +5,18 @@
 #include "FacultyTable.h"
 #include "TreeNode.h"
 #include <iostream>
+#include "UndoManager.h"
+#include "SnapShotContainer.h"
 //#include "FileOutputManager.h"
 
 class DataBaseManager {
 
 private:
-  StudentTable masterStudent;
-  FacultyTable masterFaculty;
-  //FileOutputManager<FacultyTable> fileOutputer;
+  StudentTable* masterStudent;
+  FacultyTable* masterFaculty;
+  UndoManager<SnapShotContainer>* undoer;
+
+  SnapShotContainer* snapShotContainer;
 
   bool determineWhichCommandToCarryOut(int response);
 
@@ -20,6 +24,7 @@ private:
   void getRestOfInputForOptionFour();
 
   int promptUserForAnID(std::string messageTellingUserWhatInputIsNeeded, bool searchForIDInMasterFaculty);
+  void checkIfCommandChangedStructureOfDatabase();
 
 public:
   DataBaseManager();

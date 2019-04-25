@@ -95,17 +95,17 @@ public:
 
   virtual ~BinarySearchTree() {
 
-    std::cout<<"Delete anything else in tree"<<std::endl;
+    //std::cout<<"Delete anything else in tree"<<std::endl;
     if (empty() == false) {
 
       deleteAll(root);
-      std::cout<<empty()<<std::endl;
+      //std::cout<<empty()<<std::endl;
 
     }
 
   }
 
-  TreeNode<K, V>* getRoot() {
+  TreeNode<K, V>* getRoot() const {
 
     return root;
 

@@ -1,18 +1,12 @@
-1100222
-Mich Urizo
-Sophmore
-CPSC
-3322999
-3.9
-2299333
-Diego Avena
-Sophmore
-CPSC
-2280444
-3.8
-6677888
-Forest Gump
-Junior
+1166000
+Master Yoda
+Senior
 CPSC
 3322999
 4.5
+2299333
+Diego Avena
+Sophomore
+CPSC
+11111111
+3.8

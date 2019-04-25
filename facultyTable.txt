@@ -2,15 +2,13 @@
 John Adams
 Lecturer
 CPSC
-1
-2299333
+0
 3322999
 Abraham Lincoln
 Professor
 CPSC
-2
-1100222
-2299333
+1
+1166000
 4440055
 Dr. Bubba
 Lecturer

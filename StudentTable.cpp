@@ -7,6 +7,7 @@ StudentTable::StudentTable():BinarySearchTree(){
 
   currentLineNumber = 1;
   numberOfFirstLineForDataSet = 1;
+  commandModifiedTableSuccessfully = false;
 
 }
 
@@ -14,12 +15,49 @@ StudentTable::StudentTable(int rootKey, Student rootValue):BinarySearchTree(root
 
   currentLineNumber = 1;
   numberOfFirstLineForDataSet = 1;
+  commandModifiedTableSuccessfully = false;
 
 }
 
 StudentTable::~StudentTable() {
 
   //output the contents of each node in this table to the text file, and than allow the base constructor to delete the tree:
+
+}
+
+StudentTable::StudentTable(StudentTable& tableToCopy) {
+
+  commandModifiedTableSuccessfully = false;
+  traverseTreeToCopyIt(tableToCopy.getRoot());
+
+}
+
+bool StudentTable::getCommandModifiedTableSuccessfully() {
+
+  return commandModifiedTableSuccessfully;
+
+}
+
+void StudentTable::setCommandModifiedTableSuccessfully(bool commandModifiedTableSuccessfully) {
+
+  this->commandModifiedTableSuccessfully = commandModifiedTableSuccessfully;
+
+}
+
+void StudentTable::traverseTreeToCopyIt(TreeNode<int, Student>* node) {
+
+  if (node != NULL) {
+
+    traverseTreeToCopyIt(node->left);
+
+    //std::cout<<"Inserting node"<<std::endl;
+    Student* student = new Student(node->getValue().getName(), node->getValue().getLevel(), node->getValue().getMajor(), node->getValue().getPersonID(), node->getValue().getStudentAdvisorID(), node->getValue().getStudentGPA());
+    insert(student->getPersonID(), *student);
+    delete student;
+
+    traverseTreeToCopyIt(node->right);
+
+  }
 
 }
 
@@ -113,6 +151,7 @@ void StudentTable::changeStudentsAdvisor(FacultyTable& facultyTree) {
   //tell the new advisor that they are now assigned to this student as an advisor:
   facultyTree.find(IDOfFacultyToChangeStudentAdvisorTo)->getValue().advisees->addFront(IDOfStudentToChangeAdvisorOf);
 
+  commandModifiedTableSuccessfully = true;
   cout<<"Student advisor has been changed"<<endl;
 
 }
@@ -126,8 +165,8 @@ void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>*
     if ((treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())) == false) {
 
       //this student is assigned an advisor that does not exist in the faculty tree:
-      int randomNumber = rand() % treeToBaseReferenceOffOf.listOfIDSThatExistInTree.getSize();
-      node->getValue().setAdvisorID(treeToBaseReferenceOffOf.listOfIDSThatExistInTree.findAt(randomNumber));
+      int randomNumber = rand() % treeToBaseReferenceOffOf.listOfIDSThatExistInTree->getSize();
+      node->getValue().setAdvisorID(treeToBaseReferenceOffOf.listOfIDSThatExistInTree->findAt(randomNumber));
 
       bool needToAddStudentToAdvisorsList = true;
       for (int i = 0; i < treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())->getValue().advisees->getSize(); i++) {
@@ -349,6 +388,7 @@ void StudentTable::removeAStudent(FacultyTable& facultyTree) {
     TreeNode<int, Faculty>* advisorOfThisStudent = facultyTree.find(studentToRemove->getValue().getStudentAdvisorID());
     advisorOfThisStudent->getValue().advisees->remove(IDOfStudentToRemove);
 
+    commandModifiedTableSuccessfully = true;
     //remove this student from the student table:
     erase(IDOfStudentToRemove);
 
@@ -452,11 +492,11 @@ void StudentTable::addAStudent(FacultyTable& facultyTree) {
   }
 
   //maintain referential integrity:
-  if (facultyTree.listOfIDSThatExistInTree.find(advisorIDOfNewStudentToAdd) == -1) {
+  if (facultyTree.listOfIDSThatExistInTree->find(advisorIDOfNewStudentToAdd) == -1) {
 
     //this student has been given a faculty that does not actually exist in the current database, assign them to a random faculty member:
-    int randomNumber = rand() % facultyTree.listOfIDSThatExistInTree.getSize();
-    advisorIDOfNewStudentToAdd = facultyTree.listOfIDSThatExistInTree.findAt(randomNumber);
+    int randomNumber = rand() % facultyTree.listOfIDSThatExistInTree->getSize();
+    advisorIDOfNewStudentToAdd = facultyTree.listOfIDSThatExistInTree->findAt(randomNumber);
 
     //tell the advisor that they have been assigned to this student as an advisor:
     cout<<"STUDENT SET TO ADVISOR WITH ID: "<<advisorIDOfNewStudentToAdd<<endl;
@@ -466,6 +506,7 @@ void StudentTable::addAStudent(FacultyTable& facultyTree) {
 
   Student newStudentToAdd(nameOfNewStudentToAdd, levelOfNewStudentToAdd, majorOfNewStudentToAdd, IDOfNewStudentToAdd, advisorIDOfNewStudentToAdd, GPAOfNewStudentToAdd);
   insert(newStudentToAdd.getPersonID(), newStudentToAdd);
+  commandModifiedTableSuccessfully = true;
 
 }
 

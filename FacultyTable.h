@@ -12,6 +12,8 @@
 #include <stdlib.h> // for access to the rand method
 #include <cstdlib> //for access to RAND_MAX constant
 #include <iostream>
+//#include "SnapShotContainer.h"
+#include "UndoManager.h"
 
 class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable>, public FileOutputManager<FacultyTable> {
 
@@ -26,12 +28,20 @@ private:
   int numberOfLineWhereNumberOfAdviseesWasAt;
   int numberOfAdvisees;
 
+  bool commandModifiedTableSuccessfully;
+
+  void traverseTreeToCopyIt(TreeNode<int, Faculty>* node);
+
 public:
-  DoubleLinkedList<int> listOfIDSThatExistInTree;
+  DoubleLinkedList<int>* listOfIDSThatExistInTree;
 
   FacultyTable();
   FacultyTable(int rootKey, Faculty rootValue);
+  FacultyTable(const FacultyTable& tableToCopy);
   ~FacultyTable();
+
+  bool getCommandModifiedTableSuccessfully();
+  void setCommandModifiedTableSuccessfully(bool commandModifiedTableSuccessfully);
 
   void setUpTable(FacultyTable& objectToBuildUsingTheTextFile);
 

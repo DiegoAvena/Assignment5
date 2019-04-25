@@ -3,20 +3,49 @@ using namespace std;
 
 DataBaseManager::DataBaseManager() {
 
+  masterStudent = new StudentTable();
+  masterFaculty = new FacultyTable();
+  undoer = new UndoManager<SnapShotContainer>(5);
+
 }
 
 DataBaseManager::~DataBaseManager() {
+
+  delete masterFaculty;
+  delete masterStudent;
+  delete undoer;
+
+  if (snapShotContainer != NULL) {
+
+    delete snapShotContainer;
+
+  }
+  //delete tempFaculty;
 
 }
 
 void DataBaseManager::presentMenuToUser() {
 
-  masterStudent.setUpTable(masterStudent);
-  masterFaculty.setUpTable(masterFaculty);
+  masterStudent->setUpTable(*masterStudent);
+  masterFaculty->setUpTable(*masterFaculty);
 
-  masterStudent.initializeReferentialIntegrityOfTable(masterStudent.getRoot(), masterFaculty);
+  masterStudent->initializeReferentialIntegrityOfTable(masterStudent->getRoot(), *masterFaculty);
   //masterFaculty.getRoot();
-  masterFaculty.initializeReferentialIntegrityOfTable(masterFaculty.getRoot(), masterStudent);
+  masterFaculty->initializeReferentialIntegrityOfTable(masterFaculty->getRoot(), *masterStudent);
+  //tempFaculty(masterFaculty);
+  //FacultyTable* tempFaculty = new FacultyTable(*masterFaculty);
+  //tempFaculty =
+  //tempFaculty->printFaculty(tempFaculty->getRoot(), masterStudent);
+  //delete masterFaculty;
+  //masterFaculty = new FacultyTable(*tempFaculty);
+  //masterFaculty = tempFaculty;
+  //masterFaculty = tempFaculty;
+
+  //StudentTable* tempStudentTable = new StudentTable(*masterStudent);
+  //tempStudentTable->printStudents(tempStudentTable->getRoot(), *masterFaculty);
+  //delete masterStudent;
+  //masterStudent = new StudentTable(*tempStudentTable);
+  //delete tempStudentTable;
 
   while (true) {
 
@@ -39,7 +68,7 @@ void DataBaseManager::presentMenuToUser() {
     int userResponse;
     cin>>userResponse;
 
-    cout<<masterStudent.empty()<<endl;
+    cout<<masterStudent->empty()<<endl;
 
     if (cin.fail()) {
 
@@ -62,96 +91,181 @@ void DataBaseManager::presentMenuToUser() {
 
 }
 
+void DataBaseManager::checkIfCommandChangedStructureOfDatabase() {
+
+  if (masterStudent->getCommandModifiedTableSuccessfully()) {
+
+    cout<<"The master student tree was changed!"<<endl;
+    masterStudent->setCommandModifiedTableSuccessfully(false);
+    undoer->saveSnapShot(snapShotContainer);
+
+  }
+  else if (masterFaculty->getCommandModifiedTableSuccessfully()) {
+
+    cout<<"The master faculty tree was changed!"<<endl;
+    masterFaculty->setCommandModifiedTableSuccessfully(false);
+    undoer->saveSnapShot(snapShotContainer);
+
+  }
+
+  delete snapShotContainer;
+  snapShotContainer = NULL;
+
+}
+
 bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
+  //SnapShotContainer(StudentTable* previousStudentTable, FacultyTable* previousFacultyTable);
+  snapShotContainer = new SnapShotContainer(masterStudent, masterFaculty);
 
   if (response == 1) {
 
-    masterStudent.printStudents(masterStudent.getRoot(), masterFaculty);
+    masterStudent->printStudents(masterStudent->getRoot(), *masterFaculty);
+    delete snapShotContainer;
+    snapShotContainer = NULL;
     return false;
 
   }
   else if (response == 2) {
 
-    masterFaculty.printFaculty(masterFaculty.getRoot(), masterStudent);
+    masterFaculty->printFaculty(masterFaculty->getRoot(), *masterStudent);
+    delete snapShotContainer;
+    snapShotContainer = NULL;
     return false;
 
   }
   else if (response == 3) {
 
-    masterStudent.printASpecificStudent(masterFaculty);
+    masterStudent->printASpecificStudent(*masterFaculty);
+    delete snapShotContainer;
+    snapShotContainer = NULL;
     return false;
 
   }
   else if (response == 4) {
 
-    masterFaculty.printASpecificFacultyMember(masterStudent);
+    masterFaculty->printASpecificFacultyMember(*masterStudent);
+    delete snapShotContainer;
+    snapShotContainer = NULL;
     return false;
 
   }
   else if (response == 5) {
 
-    masterStudent.printFacultyInformationForASpecificStudent(masterFaculty);
+    masterStudent->printFacultyInformationForASpecificStudent(*masterFaculty);
+    delete snapShotContainer;
+    snapShotContainer = NULL;
     return false;
 
   }
   else if (response == 6) {
 
-    masterFaculty.printAdviseeInfoForSpecificFacultyMember(masterStudent);
+    masterFaculty->printAdviseeInfoForSpecificFacultyMember(*masterStudent);
+    delete snapShotContainer;
+    snapShotContainer = NULL;
     return false;
 
   }
   else if (response == 7) {
 
-    masterStudent.addAStudent(masterFaculty);
+    masterStudent->addAStudent(*masterFaculty);
+    checkIfCommandChangedStructureOfDatabase();
     return false;
 
   }
   else if (response == 8) {
 
     //delete a student given the student ID
-    masterStudent.removeAStudent(masterFaculty);
+    masterStudent->removeAStudent(*masterFaculty);
+    checkIfCommandChangedStructureOfDatabase();
     return false;
 
   }
   else if (response == 9) {
 
-    masterFaculty.AddAFacultyMember(masterStudent);
+    masterFaculty->AddAFacultyMember(*masterStudent);
+    checkIfCommandChangedStructureOfDatabase();
     return false;
 
   }
   else if (response == 10) {
 
     //delete a faculty given their ID
-    masterFaculty.removeAFacultyMember(masterStudent);
+    masterFaculty->removeAFacultyMember(*masterStudent);
+    checkIfCommandChangedStructureOfDatabase();
     return false;
 
   }
   else if (response == 11) {
 
     //change a student's advisor given the student ID and the new faculty ID
-    masterStudent.changeStudentsAdvisor(masterFaculty);
+    masterStudent->changeStudentsAdvisor(*masterFaculty);
+    checkIfCommandChangedStructureOfDatabase();
     return false;
 
   }
   else if (response == 12) {
 
     //remove an advisee from a faculty member given the IDs
-    masterFaculty.removeAnAdvisee(masterStudent);
+    masterFaculty->removeAnAdvisee(*masterStudent);
+    checkIfCommandChangedStructureOfDatabase();
     return false;
 
   }
   else if (response == 13) {
 
     //rollback
+    delete snapShotContainer;
+    snapShotContainer = NULL;
+
+
+    if (undoer->CheckIfUserCanRollback()) {
+
+      SnapShotContainer* recentSnapShot = undoer->rollback();
+
+      if (recentSnapShot != NULL) {
+
+        cout<<"ROLLBACK STARTING..."<<endl;
+
+        //there was a snapshot that can be set back to:
+        FacultyTable* newFacultyTable = new FacultyTable(*recentSnapShot->getPreviousFacultyTable());
+        StudentTable* newStudentTable = new StudentTable(*recentSnapShot->getPreviousStudentTable());
+
+        cout<<"PREVIOUS TABLES AQQUIRED!"<<endl;
+
+        //delete the tables that have the changes the user is trying to undo:
+        delete masterFaculty; //Calling this right after removing a faculty causes a seg fault where the listOfIDSThatExistInTree was never allocated
+        delete masterStudent;
+
+        cout<<"OLD TABLES DELETED"<<endl;
+
+        //set the tables that were just cleared to the new tables that are the previous data tables:
+        masterFaculty = new FacultyTable(*newFacultyTable);
+        masterStudent = new StudentTable(*newStudentTable);
+
+        cout<<"OLD TABLES SET TO PREVIOUS TABLES!"<<endl;
+
+        //delete the new tables that were made to store the previous tables the database was going back to
+        delete newFacultyTable;
+        delete newStudentTable;
+
+        cout<<"DID SOME MEMORY CLEANUP"<<endl;
+        cout<<"ROLLBACK SUCCESS!"<<endl;
+
+      }
+
+    }
+
+    //cout<<"ROLLBACK FAILURE!"<<endl;
+
     return false;
 
   }
   else if (response == 14) {
 
     //exit and save both tables to the text file
-    masterFaculty.writeToFile(masterFaculty, "facultyTable.txt");
-    masterStudent.writeToFile(masterStudent, "studentTable.txt");
-    //fileOutputer.writeToFile(masterFaculty, "facultyTable.txt");
+    //masterFaculty->writeToFile(*masterFaculty, "facultyTable.txt");
+    //masterStudent->writeToFile(*masterStudent, "studentTable.txt");
+
     cout<<"GOODBYE"<<endl;
     return true;
 
@@ -159,12 +273,15 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   else {
 
     cout<<"Invalid response given. The integer you enter must be between 1 and 14"<<endl;
+    delete snapShotContainer;
+    snapShotContainer = NULL;
     return false;
 
   }
 
 }
 
+/*
 int DataBaseManager::promptUserForAnID(string messageTellingUserWhatInputIsNeeded, bool searchForIDInMasterFaculty) {
 
   cout<<messageTellingUserWhatInputIsNeeded<<endl;
@@ -214,4 +331,4 @@ int DataBaseManager::promptUserForAnID(string messageTellingUserWhatInputIsNeede
 
   }
 
-}
+}*/

@@ -9,6 +9,59 @@ FacultyTable::FacultyTable():BinarySearchTree(){
   facultyToAddToTable = new Faculty();
   currentLineNumber = 1;
   numberOfFirstLineForDataSet = 1;
+  commandModifiedTableSuccessfully = false;
+  listOfIDSThatExistInTree = new DoubleLinkedList<int>();
+
+}
+
+void FacultyTable::traverseTreeToCopyIt(TreeNode<int, Faculty>* node) {
+
+  //traverseTreeToCopyIt(node->left)
+  if (node != NULL) {
+
+    traverseTreeToCopyIt(node->left);
+
+    Faculty* copyOfFacultyNode = new Faculty(node->getValue().getName(), node->getValue().getLevel(), node->getValue().getDepartment(), node->getValue().getPersonID());
+
+    for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
+
+      copyOfFacultyNode->advisees->addFront(node->getValue().advisees->findAt(i));
+
+    }
+
+    insert(copyOfFacultyNode->getPersonID(), *copyOfFacultyNode);
+    delete copyOfFacultyNode;
+
+    traverseTreeToCopyIt(node->right);
+
+  }
+
+}
+
+FacultyTable::FacultyTable(const FacultyTable& tableToCopy) {
+
+  commandModifiedTableSuccessfully = false;
+  listOfIDSThatExistInTree = new DoubleLinkedList<int>();
+
+  for (int i = 0; i < tableToCopy.listOfIDSThatExistInTree->getSize(); i++) {
+
+    listOfIDSThatExistInTree->addFront(tableToCopy.listOfIDSThatExistInTree->findAt(i));
+
+  }
+
+  traverseTreeToCopyIt(tableToCopy.getRoot());
+
+}
+
+bool FacultyTable::getCommandModifiedTableSuccessfully() {
+
+  return commandModifiedTableSuccessfully;
+
+}
+
+void FacultyTable::setCommandModifiedTableSuccessfully(bool commandModifiedTableSuccessfully){
+
+  this->commandModifiedTableSuccessfully = commandModifiedTableSuccessfully;
 
 }
 
@@ -43,7 +96,9 @@ FacultyTable::FacultyTable(int rootKey, Faculty rootValue):BinarySearchTree(root
 FacultyTable::~FacultyTable(){
 
   //delete facultyToAddToTable;
-  //cout<<"Delete anything for the faculty table"<<endl;
+  cout<<"Delete anything for the faculty table"<<endl;
+  //delete listOfIDSThatExistInTree; //causes a seg fault when we try to rollback from a removeFacultyCommand
+
   deleteListOfAdviseesForEachFaculty(root);
   //delete serializer;
 
@@ -154,7 +209,8 @@ void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTree
     else if (IDOfNewFacultyAdvisee < 0) {
 
       insert(newFacultyToAdd->getPersonID(), *newFacultyToAdd);
-      listOfIDSThatExistInTree.addFront(newFacultyToAdd->getPersonID());
+      listOfIDSThatExistInTree->addFront(newFacultyToAdd->getPersonID());
+      commandModifiedTableSuccessfully = true;
 
       delete newFacultyToAdd;
       cout<<"Faculty member added!"<<endl;
@@ -477,7 +533,7 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
   if (facultyToRemoveAdviseeFor->getValue().advisees->find(IDOfAdviseeToRemove) == -1) {
 
     //this advisee is not assigned to this faculty member:
-    cout<<"Sorry, but teh advisee you wish to remove from this faculty member is not assigned to this faculty member."<<endl;
+    cout<<"Sorry, but the advisee you wish to remove from this faculty member is not assigned to this faculty member."<<endl;
     return;
 
   }
@@ -488,11 +544,11 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
   //automatically assign this advisee to another advisor:
   while (true) {
 
-    int randomNumber = rand() % listOfIDSThatExistInTree.getSize();
-    if (listOfIDSThatExistInTree.findAt(randomNumber) != IDOfFacultyToRemoveAdviseeFor) {
+    int randomNumber = rand() % listOfIDSThatExistInTree->getSize();
+    if (listOfIDSThatExistInTree->findAt(randomNumber) != IDOfFacultyToRemoveAdviseeFor) {
 
       //this is an advisor that is not the advisor the student was just removed from, assign them to this advisor:
-      adviseeToRemove->getValue().setAdvisorID(listOfIDSThatExistInTree.findAt(randomNumber));
+      adviseeToRemove->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
 
       //tell the new advisor that they have been assigned to this student as an advisor:
       find(adviseeToRemove->getValue().getStudentAdvisorID())->getValue().advisees->addFront(IDOfAdviseeToRemove);
@@ -503,6 +559,7 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
 
   }
 
+  commandModifiedTableSuccessfully = true;
   cout<<"Advisee removed and automatically reassigned to advisor with ID "<<adviseeToRemove->getValue().getStudentAdvisorID()<<endl;
 
 }
@@ -533,30 +590,42 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
     if (facultyNodeToRemove != NULL) {
 
       //remove the ID of the faculty that is about to be deleted from the list of faculty IDs currently in the tree
-      listOfIDSThatExistInTree.remove(IDOfFacultyToRemove);
+      cout<<"REMOVING FACULTY..."<<endl;
+      listOfIDSThatExistInTree->remove(IDOfFacultyToRemove);
+      cout<<"REASSIGNING ADVISEES IF HE OR SHE HAS ANY..."<<endl;
 
       //Reassign each of the advisees for this faculty member to a new advisor
-      if (listOfIDSThatExistInTree.empty() == false) {
+      if (listOfIDSThatExistInTree->empty() == false) {
 
         //there are still faculties that can be assigned to the advisees of this faculty
         for (int i = 0; i < facultyNodeToRemove->getValue().advisees->getSize(); i++) {
 
+          cout<<"GETTING ID OF ADVISEE..."<<endl;
           int IDOfAdviseeToReassign = facultyNodeToRemove->getValue().advisees->findAt(i);
 
-          int randomNumber = rand() % listOfIDSThatExistInTree.getSize(); //randomly reassign:
-          studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(listOfIDSThatExistInTree.findAt(randomNumber));
+          cout<<"MAKING RANDOM NUMBER..."<<endl;
+          int randomNumber = rand() % listOfIDSThatExistInTree->getSize(); //randomly reassign:
+
+          cout<<"RANDOMLY ASSIGNING ADVISEE TO ADVISOR NOW..."<<endl;
+          studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
 
           //tell the advisor being assigned to this new advisee that they have been assigned to this new advisee:
-          int IDOfAdvisorToAssignAdviseeTo = listOfIDSThatExistInTree.findAt(randomNumber);
+          cout<<"TELLING ADVISOR THAT THEY HAVE BEEN ASSIGNED TO THIS STUDENT..."<<endl;
+          int IDOfAdvisorToAssignAdviseeTo = listOfIDSThatExistInTree->findAt(randomNumber);
+
+          cout<<"FINSIHING TELLING ADVISOR THAT THEY HAVE BEEN ASSIGNED TO THIS STUDENT..."<<endl;
           find(IDOfAdvisorToAssignAdviseeTo)->getValue().addAdvisee(IDOfAdviseeToReassign);
 
+          cout<<"DONE!"<<endl;
         }
 
       }
 
       //erase the faculty from the tree
       cout<<"Faculty member removed from database."<<endl;
+      //delete listOfIDSThatExistInTree;
       erase(IDOfFacultyToRemove);
+      commandModifiedTableSuccessfully = true;
 
     }
     else {
@@ -641,7 +710,7 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
 
     }
 
-    listOfIDSThatExistInTree.addFront(facultyToAddToTable->getPersonID());
+    listOfIDSThatExistInTree->addFront(facultyToAddToTable->getPersonID());
     insert(facultyToAddToTable->getPersonID(), /*Faculty(facultyToAddToTable.getName(), facultyToAddToTable.getLevel(), facultyToAddToTable.getDepartment(), facultyToAddToTable.getPersonID(), arrayOfAdvisees, facultyToAddToTable.getAdvisees().getSize())*/*facultyToAddToTable);
     //delete facultyToAddToTable->advisees;
     delete facultyToAddToTable;
