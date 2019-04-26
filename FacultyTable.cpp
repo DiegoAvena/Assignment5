@@ -545,7 +545,22 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
   while (true) {
 
     int randomNumber = rand() % listOfIDSThatExistInTree->getSize();
-    if (listOfIDSThatExistInTree->findAt(randomNumber) != IDOfFacultyToRemoveAdviseeFor) {
+
+    if (listOfIDSThatExistInTree->getSize() == 1) {
+
+      /*
+
+      -There is only 1 faculty member in the tree, and this is the member for which
+      this advisee is be removed for, so there will be no other advisor to reassign this advisee to besides this one,
+      but the user just said to remove this advisee for this advisor so he or she cannot be reassigned to this faculty member; thus,
+      in this case there is no one to reassign this student to and they will be advisorless for now until assigned by a user.
+
+      */
+      adviseeToRemove->getValue().setAdvisorID(-1);
+      break;
+
+    }
+    else if (listOfIDSThatExistInTree->findAt(randomNumber) != IDOfFacultyToRemoveAdviseeFor) {
 
       //this is an advisor that is not the advisor the student was just removed from, assign them to this advisor:
       adviseeToRemove->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
@@ -618,7 +633,10 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
           int randomNumber = rand() % listOfIDSThatExistInTree->getSize(); //randomly reassign:
 
           cout<<"RANDOMLY ASSIGNING ADVISEE TO ADVISOR NOW..."<<endl;
-          studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
+          TreeNode<int, Student>* advisee = studentTreeReference.find(IDOfAdviseeToReassign);
+          advisee->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
+          advisee->getValue().setStudentHasBeenAssignedToAnAdviseeAlready(true);
+          //studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
 
           //tell the advisor being assigned to this new advisee that they have been assigned to this new advisee:
           cout<<"TELLING ADVISOR THAT THEY HAVE BEEN ASSIGNED TO THIS STUDENT..."<<endl;
@@ -650,7 +668,6 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
 
       //erase the faculty from the tree
       cout<<"Faculty member removed from database."<<endl;
-      //delete listOfIDSThatExistInTree;
       erase(IDOfFacultyToRemove);
       commandModifiedTableSuccessfully = true;
 

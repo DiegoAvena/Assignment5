@@ -7,7 +7,6 @@
 #include "FileInputManager.h"
 #include "Faculty.h"
 #include <stdlib.h> // for access to the rand method
-#include <cstdlib> //for access to RAND_MAX constant
 #include "DoubleLinkedList.h"
 #include "FacultyTable.h"
 #include <iostream>
@@ -15,16 +14,16 @@
 class StudentTable: public BinarySearchTree<int, Student>, public FileInputManager<StudentTable>, public FileOutputManager<StudentTable> {
 
 private:
-  //FileOutputManager fileOutputer;
   int currentLineNumber;
   int numberOfFirstLineForDataSet;
   Student studentToAddToTable;
   void traverseTreeToCopyIt(TreeNode<int, Student>* node);
   bool commandModifiedTableSuccessfully;
 
+  
+
 public:
 
-  //DoubleLinkedList<int> facultyIDs;
   bool getCommandModifiedTableSuccessfully();
   void setCommandModifiedTableSuccessfully(bool commandModifiedTableSuccessfully);
 

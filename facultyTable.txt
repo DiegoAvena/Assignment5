@@ -2,6 +2,26 @@
 Dr. Bubba
 Lecturer
 CPSC
-2
-2299333
+1
 1155666
+4455999
+Dr. Saw
+Lecturer
+CPSC
+0
+5566888
+Dr. Yoda
+Lecturer
+CPSC
+0
+6677999
+Dr. Hubble
+Lecturer
+CPSC
+1
+2299333
+6688999
+Dr. Windu
+Lecturer
+History
+0

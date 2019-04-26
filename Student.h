@@ -34,8 +34,6 @@ public:
   void setStudentGPA(double studentGPA);
   void setMajor(std::string major);
 
-
-
 };
 
 #endif

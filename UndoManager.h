@@ -45,16 +45,22 @@ public:
 
       //need to remove the oldest snapshot at the bottom of the stack to make room for this new snapshot
       ListBasedStack<dataTypeOfItemsToSave*> reverseOfOriginalStack;
-      while (stackToSaveItems.isEmpty() != false) {
+      while (stackToSaveItems.isEmpty() == false) {
 
+        //cout<<"ITEM BEING PUSHED ONTO STACK IS: "<<stackToSaveItems.top()->getPreviousFacultyTable()->getRoot()->getValue()<<endl;
         reverseOfOriginalStack.push(stackToSaveItems.top());
+        std::cout<<"Size of reversed stack is: "<<reverseOfOriginalStack.getSize()<<std::endl;
         stackToSaveItems.pop();
 
       }
 
+      std::cout<<"STACK REVERSED..."<<std::endl;
       //delete reverseOfOriginalStack.top();
+      std::cout<<"REVERSE OF STACK IS EMPTY: "<<reverseOfOriginalStack.isEmpty()<<std::endl;
       reverseOfOriginalStack.pop();
-      while (reverseOfOriginalStack.isEmpty() != false) {
+      std::cout<<"OLDEST COMMAND REMOVED..."<<std::endl;
+
+      while (reverseOfOriginalStack.isEmpty() == false) {
 
         stackToSaveItems.push(reverseOfOriginalStack.top());
         reverseOfOriginalStack.pop();
