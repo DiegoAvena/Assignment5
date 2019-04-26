@@ -600,7 +600,7 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
         cout<<listOfIDSThatExistInTree->findAt(i)<<endl;
 
       }*/
-      listOfIDSThatExistInTree->printList();
+      //listOfIDSThatExistInTree->printList();
 
 
       cout<<"REASSIGNING ADVISEES IF HE OR SHE HAS ANY..."<<endl;
@@ -628,6 +628,22 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
           find(IDOfAdvisorToAssignAdviseeTo)->getValue().addAdvisee(IDOfAdviseeToReassign);
 
           cout<<"DONE!"<<endl;
+        }
+
+      }
+      else {
+
+        //Tell student advisee that there is no advisors left for them to be assigned to:
+        for (int i = 0; i < facultyNodeToRemove->getValue().advisees->getSize(); i++) {
+
+          cout<<"GETTING ID OF ADVISEE..."<<endl;
+          int IDOfAdviseeToReassign = facultyNodeToRemove->getValue().advisees->findAt(i);
+
+          cout<<"TELLING ADVISEE THAT THERE IS NO ADVISORS LEFT WHO CAN TAKE THEM..."<<endl;
+          studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(-1);
+
+          cout<<"DONE!"<<endl;
+
         }
 
       }

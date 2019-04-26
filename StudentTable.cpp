@@ -162,9 +162,9 @@ void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>*
 
     initializeReferentialIntegrityOfTable(node->left, treeToBaseReferenceOffOf);
 
-    if ((treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())) == false) {
+    if (((treeToBaseReferenceOffOf.find(node->getValue().getStudentAdvisorID())) == false) && (treeToBaseReferenceOffOf.empty() == false)) {
 
-      //this student is assigned an advisor that does not exist in the faculty tree:
+      //this student is assigned an advisor that does not exist in the faculty tree, and the faculty tree is not empty, so there are advisors that can be assigned to this student:
       int randomNumber = rand() % treeToBaseReferenceOffOf.listOfIDSThatExistInTree->getSize();
       node->getValue().setAdvisorID(treeToBaseReferenceOffOf.listOfIDSThatExistInTree->findAt(randomNumber));
 
@@ -212,10 +212,23 @@ void StudentTable::printStudents(TreeNode<int, Student>* node, BinarySearchTree<
     cout<<"Student advisor information: "<<endl;
 
     TreeNode<int, Faculty>* facultyNode = tree.find(node->getValue().getStudentAdvisorID());
-    cout<<"   Advisor ID: "<<facultyNode->getValue().getPersonID()<<endl;
-    cout<<"   Advisor Name: "<<facultyNode->getValue().getName()<<endl;
-    cout<<"   Advisor Level: "<<facultyNode->getValue().getLevel()<<endl;
-    cout<<"   Advisor department: "<<facultyNode->getValue().getDepartment()<<endl;
+
+    if (facultyNode != NULL) {
+
+      //the student has an advisor assigned to them that we can see info of
+      //TreeNode<int, Faculty>* facultyNode = tree.find(node->getValue().getStudentAdvisorID());
+      cout<<"   Advisor ID: "<<facultyNode->getValue().getPersonID()<<endl;
+      cout<<"   Advisor Name: "<<facultyNode->getValue().getName()<<endl;
+      cout<<"   Advisor Level: "<<facultyNode->getValue().getLevel()<<endl;
+      cout<<"   Advisor department: "<<facultyNode->getValue().getDepartment()<<endl;
+
+    }
+    else {
+
+      cout<<"   N/A"<<endl;
+
+    }
+
 
     /*cout<<"   Advisor Advisees: "<<endl;
 
@@ -335,21 +348,11 @@ void StudentTable::printASpecificStudent(BinarySearchTree<int, Faculty>& tree) {
         cout<<"   Advisor Level: "<<facultyNode->getValue().getLevel()<<endl;
         cout<<"   Advisor department: "<<facultyNode->getValue().getDepartment()<<endl;
 
-        /*cout<<"   Advisor Advisees: "<<endl;
-        TreeNode<int, Student>* studentToPrintAdviseeInformationFor = find(userResponse);
+      }
+      else {
 
-        for (int i = 0; i < facultyNode->getValue().advisees->getSize(); i++) {
-
-          cout<<"------------------------------------------"<<endl;
-          studentToPrintAdviseeInformationFor = find(facultyNode->getValue().advisees->findAt(i));
-          cout<<"       Student ID: "<<studentToPrintAdviseeInformationFor->getKey()<<endl;
-          cout<<"       Student Name: "<<studentToPrintAdviseeInformationFor->getValue().getName()<<endl;
-          cout<<"       Student Level: "<<studentToPrintAdviseeInformationFor->getValue().getLevel()<<endl;
-          cout<<"       Student Major: "<<studentToPrintAdviseeInformationFor->getValue().getMajor()<<endl;
-          cout<<"       Student GPA: "<<studentToPrintAdviseeInformationFor->getValue().getStudentGPA()<<endl;
-          cout<<"------------------------------------------"<<endl;
-
-        }*/
+        //no advisor information to print out:
+        cout<<"N/A"<<endl;
 
       }
 
@@ -386,9 +389,16 @@ void StudentTable::removeAStudent(FacultyTable& facultyTree) {
 
     //find the advisor of this student to remove this student from their advisee list so that referential integrity is maintained:
     TreeNode<int, Faculty>* advisorOfThisStudent = facultyTree.find(studentToRemove->getValue().getStudentAdvisorID());
-    advisorOfThisStudent->getValue().advisees->remove(IDOfStudentToRemove);
+
+    if (advisorOfThisStudent != NULL) {
+
+      //student had an advisor who needs to be notified that they are no longer an advisor for this student:
+      advisorOfThisStudent->getValue().advisees->remove(IDOfStudentToRemove);
+
+    }
 
     commandModifiedTableSuccessfully = true;
+
     //remove this student from the student table:
     erase(IDOfStudentToRemove);
 

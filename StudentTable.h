@@ -27,7 +27,7 @@ public:
   //DoubleLinkedList<int> facultyIDs;
   bool getCommandModifiedTableSuccessfully();
   void setCommandModifiedTableSuccessfully(bool commandModifiedTableSuccessfully);
-  
+
   StudentTable();
   StudentTable(int rootKey, Student rootValue);
   StudentTable(StudentTable& tableToCopy);

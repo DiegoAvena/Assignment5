@@ -271,8 +271,8 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   else if (response == 14) {
 
     //exit and save both tables to the text file
-    //masterFaculty->writeToFile(*masterFaculty, "facultyTable.txt");
-    //masterStudent->writeToFile(*masterStudent, "studentTable.txt");
+    masterFaculty->writeToFile(*masterFaculty, "facultyTable.txt");
+    masterStudent->writeToFile(*masterStudent, "studentTable.txt");
 
     cout<<"GOODBYE"<<endl;
     return true;
@@ -288,55 +288,3 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   }
 
 }
-
-/*
-int DataBaseManager::promptUserForAnID(string messageTellingUserWhatInputIsNeeded, bool searchForIDInMasterFaculty) {
-
-  cout<<messageTellingUserWhatInputIsNeeded<<endl;
-  int userResponse;
-  cin>>userResponse;
-
-  if (cin.fail()) {
-
-    cin.clear();
-    cin.ignore();
-    cout<<"Invalid input: you need to enter an integer ID."<<endl;
-    return -1;
-
-  }
-  else if (searchForIDInMasterFaculty) {
-
-    TreeNode<int, Faculty>* node = masterFaculty.find(userResponse);
-
-    if (node != NULL) {
-
-      return node->getKey();
-
-    }
-    else {
-
-      cout<<"Sorry, but the faculty with the ID you gave does not exist in the current Database"<<endl;
-      return -1;
-
-    }
-
-  }
-  else {
-
-    TreeNode<int, Student>* node = masterStudent.find(userResponse);
-
-    if (node != NULL) {
-
-      return node->getKey();
-
-    }
-    else {
-
-      cout<<"Sorry, but the student with the ID you gave does not exist in the current Database"<<endl;
-      return -1;
-
-    }
-
-  }
-
-}*/

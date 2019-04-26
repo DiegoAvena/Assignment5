@@ -33,14 +33,17 @@ public:
   void readFile(std::string fileName, dataType& objectToBuildUsingTheTextFile) {
 
     std::ifstream fileToReadFrom(fileName);
+    //fileToReadFrom.exceptions(std::ifstream::failbit|std::ifstream::badbit);
 
     if (fileToReadFrom.is_open()) {
 
       std::string line;
+      std::cout<<"FILE WITH NAME: "<<fileName<<"OPENED..."<<std::endl;
 
       while (getline(fileToReadFrom, line)) {
 
-        //std::cout<<line<<std::endl;
+        //getline(fileToReadFrom, line);
+        std::cout<<line<<std::endl;
         objectToBuildUsingTheTextFile.readFromFileWithSpecificRules(line);
 
       }

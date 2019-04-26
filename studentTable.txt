@@ -1,12 +1,12 @@
-1166000
-Master Yoda
-Senior
-CPSC
-3322999
-4.5
+1155666
+Forest Gump
+Sophomore
+History
+3344666
+3.8
 2299333
 Diego Avena
 Sophomore
 CPSC
-11111111
+3344666
 3.8
