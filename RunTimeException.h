@@ -15,8 +15,11 @@ private:
 
 public:
   RunTimeException(); //default constructor
+
   RunTimeException(std::string customErrorMessage); //overloaded constructor, allows for a more detailed message to be set for this exception
+
   ~RunTimeException(); //destuctor
+
   std::string getErrorMessage(); //accessor method for getting the details of this exception
 
 };

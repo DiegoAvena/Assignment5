@@ -211,7 +211,6 @@ void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>*
     }
 
     //by this point this student node has a valid advisee assigned to him or her, the line below signals that this is the case for this student node:
-    node->getValue().setStudentHasBeenAssignedToAnAdviseeAlready(true);
     initializeReferentialIntegrityOfTable(node->right, treeToBaseReferenceOffOf);
 
   }

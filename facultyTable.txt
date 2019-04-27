@@ -2,8 +2,7 @@
 Dr. Bubba
 Lecturer
 CPSC
-1
-2299333
+0
 4455999
 Dr. Saw
 Lecturer
@@ -15,12 +14,18 @@ Lecturer
 CPSC
 1
 2288000
+6677000
+Dr. Cash
+Professor
+History
+0
 6677999
 Dr. Hubble
 Lecturer
 CPSC
-1
+2
 1155666
+2299333
 6688999
 Dr. Windu
 Lecturer

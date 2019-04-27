@@ -2,8 +2,7 @@
 
 using namespace std;
 
-//NOTE LINE 466: MIGHT BE A MEMORY LEAK!
-
+//Default constructor
 FacultyTable::FacultyTable():BinarySearchTree(){
 
   facultyToAddToTable = new Faculty();
@@ -14,15 +13,17 @@ FacultyTable::FacultyTable():BinarySearchTree(){
 
 }
 
+//traverses the tree to copy it, used by the copy constructor
 void FacultyTable::traverseTreeToCopyIt(TreeNode<int, Faculty>* node) {
 
-  //traverseTreeToCopyIt(node->left)
   if (node != NULL) {
 
     traverseTreeToCopyIt(node->left);
 
+    //copy this faculty node
     Faculty* copyOfFacultyNode = new Faculty(node->getValue().getName(), node->getValue().getLevel(), node->getValue().getDepartment(), node->getValue().getPersonID());
 
+    //fill this faculty copy node with the correct advisees
     for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
 
       copyOfFacultyNode->advisees->addFront(node->getValue().advisees->findAt(i));
@@ -30,7 +31,8 @@ void FacultyTable::traverseTreeToCopyIt(TreeNode<int, Faculty>* node) {
     }
 
     insert(copyOfFacultyNode->getPersonID(), *copyOfFacultyNode);
-    delete copyOfFacultyNode;
+
+    delete copyOfFacultyNode; //deallocate memory that was allocated for the copy of the current node
 
     traverseTreeToCopyIt(node->right);
 
@@ -38,6 +40,7 @@ void FacultyTable::traverseTreeToCopyIt(TreeNode<int, Faculty>* node) {
 
 }
 
+//copy constructor
 FacultyTable::FacultyTable(const FacultyTable& tableToCopy) {
 
   commandModifiedTableSuccessfully = false;
@@ -53,21 +56,23 @@ FacultyTable::FacultyTable(const FacultyTable& tableToCopy) {
 
 }
 
+//accessor method for the flag that signals if a command modified this faculty table
 bool FacultyTable::getCommandModifiedTableSuccessfully() {
 
   return commandModifiedTableSuccessfully;
 
 }
 
+//mutator method for setting commandModifiedTableSuccessfully flag
 void FacultyTable::setCommandModifiedTableSuccessfully(bool commandModifiedTableSuccessfully){
 
   this->commandModifiedTableSuccessfully = commandModifiedTableSuccessfully;
 
 }
 
+//the method that contains the more specific rules needed by the file fileOutputer to serialize this faculty table
 void FacultyTable::writeToFileUsingSpecficRules(ofstream* fileToWriteTo, TreeNode<int, Faculty>* node) {
 
-  //serializer = new ofstream("facultyTable.txt");
   if (node != NULL) {
 
     writeToFileUsingSpecficRules(fileToWriteTo, node->left);
@@ -91,19 +96,19 @@ void FacultyTable::writeToFileUsingSpecficRules(ofstream* fileToWriteTo, TreeNod
 
 }
 
+//overloaded constructor
 FacultyTable::FacultyTable(int rootKey, Faculty rootValue):BinarySearchTree(rootKey, rootValue){}
 
+//destructor
 FacultyTable::~FacultyTable(){
 
-  //delete facultyToAddToTable;
-  cout<<"Delete anything for the faculty table"<<endl;
-  delete listOfIDSThatExistInTree; //causes a seg fault when we try to rollback from a removeFacultyCommand
-
+  delete listOfIDSThatExistInTree;
+  delete facultyToAddToTable;
   deleteListOfAdviseesForEachFaculty(root);
-  //delete serializer;
 
 }
 
+//deletes the list of advisees that was dynamically allocated for every node in the faculty tree/table
 void FacultyTable::deleteListOfAdviseesForEachFaculty(TreeNode<int, Faculty>* node) {
 
   if (node != NULL) {
@@ -116,21 +121,38 @@ void FacultyTable::deleteListOfAdviseesForEachFaculty(TreeNode<int, Faculty>* no
 
 }
 
+//adds a faculty member into the faculty table
 void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference) {
 
   //for info on cin.get(), I used: http://www.cplusplus.com/reference/istream/istream/get/
+
+  //all of the data needed to make a faculty object
   int IDOfNewFaculty;
+
+  /*
+
+  -I use char here so that I can use cin.get. cin.get is used for these values because the user can enter a space,
+  and reguler cin>> stops reading a line though if there is a space.
+  I want to allow the user to add a spaces though for these fields, so I went with cin.get() for this
+  method.
+
+  -Information for cin.get() from: https://stackoverflow.com/questions/29630513/difference-between-cin-and-cin-get-for-char-array
+
+  */
   char nameOfNewFaculty[256];
   char levelOfNewFaculty[256];
   char departmentOfNewFaculty[256];
+
   int IDOfNewFacultyAdvisee;
 
+  //Ask the user for the id of the new faculty member they want to add:
   cout<<"Enter the ID of the new faculty member you wish to add:"<<endl;
   cin>>IDOfNewFaculty;
-  cin.ignore();
+  cin.ignore(); //insures that cin does not skip over input lines when user is asked for input, so that user can actually enter the input
 
   if (cin.fail()) {
 
+    //cin may fail in cases where user does not enter an integer id, so its error state needs to be cleared so that cin can be used again
     cin.clear();
     cout<<"Invalid Input: you must enter an integer ID for the faculty you are trying to add."<<endl;
     return;
@@ -145,61 +167,62 @@ void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTree
 
   }
 
-
+  //Ask the user for the name of the new faculty member they wish to add into the table
   cout<<"Enter the name of the new faculty member you wish to add: "<<endl;
   cin.get(nameOfNewFaculty, 256);
+  cin.ignore(); //insures that cin does not skip over input lines when user is asked for input, so that user can actually enter the input
 
   if (cin.fail()) {
 
+    //cin will fail if the user presses enter without entering anything, so the error state of cin will need to be cleared for it to be used again
     cout<<"Invalid Input: you did not enter a valid name for the new faculty you wish to add."<<endl;
-    cin.ignore();
     cin.clear();
     return;
 
   }
 
-  cin.ignore();
-
+  //Ask the user for the level of the new faculty member they wish to add into the table
   cout<<"Enter the level of the new faculty member you wish to add: "<<endl;
   cin.get(levelOfNewFaculty, 256);
+  cin.ignore(); //insures that cin does not skip over input lines when user is asked for input, so that user can actually enter the input
 
   if (cin.fail()) {
 
+    //cin will fail if the user presses enter without entering anything, so the error state of cin will need to be cleared for it to be used again
     cout<<"Invalid Input: you did not enter a valid level for the new faculty you wish to add."<<endl;
-    cin.ignore();
     cin.clear();
     return;
 
   }
 
-  cin.ignore();
-
-
+  //Ask the user for the department of the new faculty member they wish to add
   cout<<"Enter the department of the new faculty member you wish to add: "<<endl;
   cin.get(departmentOfNewFaculty, 256);
+  cin.ignore(); //insures that cin does not skip over input lines when user is asked for input, so that user can actually enter the input
 
   if (cin.fail()) {
 
+    //cin will fail if the user presses enter without entering anything, so the error state of cin will need to be cleared for it to be used again
     cout<<"Invalid Input: you did not enter a valid department for the new faculty you wish to add."<<endl;
-    cin.ignore();
     cin.clear();
     return;
 
   }
 
-  cin.ignore();
-
+  //All the information needed to create a faculty object is ready:
   Faculty* newFacultyToAdd = new Faculty(nameOfNewFaculty, levelOfNewFaculty, departmentOfNewFaculty, IDOfNewFaculty);
 
+  //prompt the user if they want to assign this new faculty member advisees and assign those advisees to this faculty member
   while (true) {
 
     cout<<"Enter a numerical ID for the Advisee you wish to add to this new faculty member, or you can enter -1 to stop and insert the faculty into the database."<<endl;
     cin>>IDOfNewFacultyAdvisee;
+    cin.ignore();
 
     if (cin.fail()) {
 
+      //cin may fail in cases where user does not enter an integer id, so its error state needs to be cleared so that cin can be used again
       cin.clear();
-      cin.ignore();
       cout<<"Invalid input: sorry, but the ID you enter must be an integer"<<endl;
 
       delete newFacultyToAdd;
@@ -207,6 +230,7 @@ void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTree
 
     }
     else if (IDOfNewFacultyAdvisee < 0) {
+      //user is done adding in advisees for this faculty member:
 
       insert(newFacultyToAdd->getPersonID(), *newFacultyToAdd);
       listOfIDSThatExistInTree->addFront(newFacultyToAdd->getPersonID());
@@ -225,9 +249,14 @@ void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTree
 
         //remove this advisee from their previous advisor since a student should not have 2 advisors
         TreeNode<int, Faculty>* facultyToRemoveAdviseeFrom = find(studentNode->getValue().getStudentAdvisorID());
-        facultyToRemoveAdviseeFrom->getValue().removeAdvisee(studentNode->getKey());
 
-        //automatically reassigns this student to this new faculty member:
+        if (facultyToRemoveAdviseeFrom != NULL) {
+
+          facultyToRemoveAdviseeFrom->getValue().removeAdvisee(studentNode->getKey());
+
+        }
+
+        //reassign this student to this new faculty member:
         studentNode->getValue().setAdvisorID(newFacultyToAdd->getPersonID());
         newFacultyToAdd->addAdvisee(studentNode->getValue().getPersonID());
 
@@ -236,6 +265,7 @@ void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTree
       }
       else {
 
+        //the user is trying to assign a student that does not exist in the database to this faculty member:
         cout<<"Sorry, that ID you entered for the advisee is an ID for a student that does not exist in the current database"<<endl;
 
       }
@@ -246,17 +276,19 @@ void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTree
 
 }
 
+//prints the information for a specific faculty member
 void FacultyTable::printASpecificFacultyMember(BinarySearchTree<int, Student>& tree) {
 
-  //TreeNode<int, Faculty>* nodeToPrint = find(keyOfNodeToPrint);
+  //ask the user for the ID of the faculty member they wish to deal with:
   cout<<"Enter the ID of the faculty member you wish to see the information of:"<<endl;
   int userResponse;
   cin>>userResponse;
+  cin.ignore(); //insures that cin does not skip over input lines when user is asked for input, so that user can actually enter the input
 
   if (cin.fail()) {
 
+    //cin may fail in cases where user does not enter an integer id, so its error state needs to be cleared so that cin can be used again
     cin.clear();
-    cin.ignore();
     cout<<"Invalid input: You must enter an integer ID."<<endl;
 
   }
@@ -266,10 +298,13 @@ void FacultyTable::printASpecificFacultyMember(BinarySearchTree<int, Student>& t
 
     if (facultyNodeToPrintInformationOf == NULL) {
 
+      //This faculty member does not exist in the current database:
       cout<<"Sorry, but the faculty with the ID you gave does not exist in the current database"<<endl;
 
     }
     else {
+
+      //the faculty member exists in the current database:
 
       cout<<"------------------------------------------"<<endl;
       cout<<"Faculty ID: "<<facultyNodeToPrintInformationOf->getKey()<<endl;
@@ -278,12 +313,67 @@ void FacultyTable::printASpecificFacultyMember(BinarySearchTree<int, Student>& t
       cout<<"Faculty Department: "<<facultyNodeToPrintInformationOf->getValue().getDepartment()<<endl;
       cout<<"Faculty Advisee Info: "<<endl;
 
-      //TreeNode<int, Student>* adviseeNode =
-      for (int i = 0; i < facultyNodeToPrintInformationOf->getValue().advisees->getSize(); i++) {
+      if (facultyNodeToPrintInformationOf->getValue().advisees->getSize() == 0) {
 
-        TreeNode<int, Student>* adviseeNode = tree.find(facultyNodeToPrintInformationOf->getValue().advisees->findAt(i));
+        cout<<"   N/A"<<endl;
 
-        if (adviseeNode != NULL) {
+      }
+      else {
+
+        for (int i = 0; i < facultyNodeToPrintInformationOf->getValue().advisees->getSize(); i++) {
+
+          TreeNode<int, Student>* adviseeNode = tree.find(facultyNodeToPrintInformationOf->getValue().advisees->findAt(i));
+
+          if (adviseeNode != NULL) {
+
+            cout<<"   ------------------------------------------"<<endl;
+            cout<<"   Advisee ID: "<<adviseeNode->getValue().getPersonID()<<endl;
+            cout<<"   Advisee Name: "<<adviseeNode->getValue().getName()<<endl;
+            cout<<"   Advisee Level: "<<adviseeNode->getValue().getLevel()<<endl;
+            cout<<"   Advisee Major: "<<adviseeNode->getValue().getMajor()<<endl;
+            cout<<"   Advisee GPA: "<<adviseeNode->getValue().getStudentGPA()<<endl;
+            cout<<"   ------------------------------------------"<<endl;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
+//prints all of the faculty members in the current database in ascending ID order
+void FacultyTable::printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& tree) {
+
+  //inorder traversal used to print faculty in order of ascending ID
+  if (node != NULL) {
+
+    printFaculty(node->left, tree);
+    cout<<"------------------------------------------"<<endl;
+    cout<<"Faculty ID: "<<node->getKey()<<endl;
+    cout<<"Faculty Name: "<<node->getValue().getName()<<endl;
+    cout<<"Faculty Level: "<<node->getValue().getLevel()<<endl;
+    cout<<"Faculty Department: "<<node->getValue().getDepartment()<<endl;
+    cout<<"Faculty Advisee Info: "<<endl;
+
+    if (node->getValue().advisees->getSize() == 0) {
+
+      //this faculty member has no advisees:
+      cout<<" N/A"<<endl;
+
+    }
+    else {
+
+      //this faculty member has advisees:
+      for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
+
+        TreeNode<int, Student>* adviseeNode = tree.find(node->getValue().advisees->findAt(i));
+
+        if (node != NULL) {
 
           cout<<"   ------------------------------------------"<<endl;
           cout<<"   Advisee ID: "<<adviseeNode->getValue().getPersonID()<<endl;
@@ -299,57 +389,25 @@ void FacultyTable::printASpecificFacultyMember(BinarySearchTree<int, Student>& t
 
     }
 
-
-  }
-
-}
-
-void FacultyTable::printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& tree) {
-
-  if (node != NULL) {
-
-    printFaculty(node->left, tree);
-    cout<<"------------------------------------------"<<endl;
-    cout<<"Faculty ID: "<<node->getKey()<<endl;
-    cout<<"Faculty Name: "<<node->getValue().getName()<<endl;
-    cout<<"Faculty Level: "<<node->getValue().getLevel()<<endl;
-    cout<<"Faculty Department: "<<node->getValue().getDepartment()<<endl;
-    cout<<"Faculty Advisee Info: "<<endl;
-
-    for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
-      cout<<"List size: "<<node->getValue().advisees->getSize()<<endl;
-      TreeNode<int, Student>* adviseeNode = tree.find(node->getValue().advisees->findAt(i));
-
-      if (node != NULL) {
-
-        cout<<"   ------------------------------------------"<<endl;
-        cout<<"   Advisee ID: "<<adviseeNode->getValue().getPersonID()<<endl;
-        cout<<"   Advisee Name: "<<adviseeNode->getValue().getName()<<endl;
-        cout<<"   Advisee Level: "<<adviseeNode->getValue().getLevel()<<endl;
-        cout<<"   Advisee Major: "<<adviseeNode->getValue().getMajor()<<endl;
-        cout<<"   Advisee GPA: "<<adviseeNode->getValue().getStudentGPA()<<endl;
-        cout<<"   ------------------------------------------"<<endl;
-
-      }
-
-    }
-
     printFaculty(node->right, tree);
 
   }
 
 }
 
+//prints all advisee info for all advisees for a specific faculty member
 void FacultyTable::printAdviseeInfoForSpecificFacultyMember(BinarySearchTree<int, Student>& tree) {
 
+  //ask the user for the ID of the faculty member they wish to deal with:
   cout<<"Enter the ID of the faculty you wish to see the Advisee information for."<<endl;
   int userResponse;
   cin>>userResponse;
+  cin.ignore();
 
   if (cin.fail()) {
 
+    //cin may fail in cases where user does not enter an integer id, so its error state needs to be cleared so that cin can be used again
     cin.clear();
-    cin.ignore();
     cout<<"Invalid Input: You must enter an integer for the ID"<<endl;
 
   }
@@ -358,26 +416,40 @@ void FacultyTable::printAdviseeInfoForSpecificFacultyMember(BinarySearchTree<int
     TreeNode<int, Faculty>* facultyNode = find(userResponse);
 
     if (facultyNode != NULL) {
+      //the faculty node the user wants to deal with exists in the current database:
 
       TreeNode<int, Student>* adviseeNode;
 
-      for (int i = 0; i < facultyNode->getValue().advisees->getSize(); i++) {
+      if (facultyNode->getValue().advisees->getSize() == 0) {
 
-        adviseeNode = tree.find(facultyNode->getValue().advisees->findAt(i));
+        //faculty member has no advisees:
+        cout<<"   N/A"<<endl;
 
-        cout<<"   ------------------------------------------"<<endl;
-        cout<<"   Advisee ID: "<<adviseeNode->getValue().getPersonID()<<endl;
-        cout<<"   Advisee Name: "<<adviseeNode->getValue().getName()<<endl;
-        cout<<"   Advisee Level: "<<adviseeNode->getValue().getLevel()<<endl;
-        cout<<"   Advisee Major: "<<adviseeNode->getValue().getMajor()<<endl;
-        cout<<"   Advisee GPA: "<<adviseeNode->getValue().getStudentGPA()<<endl;
-        cout<<"   ------------------------------------------"<<endl;
+      }
+      else {
+
+        //faculty member has advisees:
+
+        for (int i = 0; i < facultyNode->getValue().advisees->getSize(); i++) {
+
+          adviseeNode = tree.find(facultyNode->getValue().advisees->findAt(i));
+
+          cout<<"   ------------------------------------------"<<endl;
+          cout<<"   Advisee ID: "<<adviseeNode->getValue().getPersonID()<<endl;
+          cout<<"   Advisee Name: "<<adviseeNode->getValue().getName()<<endl;
+          cout<<"   Advisee Level: "<<adviseeNode->getValue().getLevel()<<endl;
+          cout<<"   Advisee Major: "<<adviseeNode->getValue().getMajor()<<endl;
+          cout<<"   Advisee GPA: "<<adviseeNode->getValue().getStudentGPA()<<endl;
+          cout<<"   ------------------------------------------"<<endl;
+
+        }
 
       }
 
     }
     else {
 
+      //the faculty member the user wants to deal with does not exist in the current database:
       cout<<"Sorry, but the faculty with the ID you entered does not exist in the current database"<<endl;
 
     }
@@ -387,55 +459,7 @@ void FacultyTable::printAdviseeInfoForSpecificFacultyMember(BinarySearchTree<int
 
 }
 
-
-int FacultyTable::getCurrentLineNumber(){
-
-  return currentLineNumber;
-
-}
-
-int FacultyTable::getNumberOfFirstLineForDataSet() {
-
-  return numberOfFirstLineForDataSet;
-
-}
-
-int FacultyTable::getNumberOfLineWhereNumberOfAdviseesWasAt() {
-
-  return numberOfLineWhereNumberOfAdviseesWasAt;
-
-}
-
-int FacultyTable::getNumberOfAdvisees() {
-
-  return numberOfAdvisees;
-
-}
-
-void FacultyTable::setCurrentLineNumber(int currentLineNumber) {
-
-  this->currentLineNumber = currentLineNumber;
-
-}
-
-void FacultyTable::setNumberOfFirstLineForDataSet(int numberOfFirstLineForDataSet) {
-
-  this->numberOfFirstLineForDataSet = numberOfFirstLineForDataSet;
-
-}
-
-void FacultyTable::setNunberOfLineWhereNumberOfAdviseesWasAt(int numberOfLineWhereNumberOfAdviseesWasAt) {
-
-  this->numberOfLineWhereNumberOfAdviseesWasAt = numberOfLineWhereNumberOfAdviseesWasAt;
-
-}
-
-void FacultyTable::setNumberOfAdvisees(int numberOfAdvisees) {
-
-  this->numberOfAdvisees = numberOfAdvisees;
-
-}
-
+//initializes the referential integrity for this faculty table/tree right when the program starts
 void FacultyTable::initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& treeToBaseReferenceOffOf) {
 
   if (node != NULL) {
@@ -447,33 +471,30 @@ void FacultyTable::initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>*
 
     for (int i = 0; i < node->getValue().advisees->getSize(); i++) {
 
-      cout<<"Checking for fake advisee"<<endl;
+      //the advisee set for this Faculty member:
+      TreeNode<int, Student>* studentNode = treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i));
 
-      if (treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i)) == NULL) {
+      if (studentNode == NULL) {
 
         //the faculty has an advisee that does not exist in the student table:
-        cout<<"Removing fake advisee"<<endl;
         listOfAdviseesToRemove.addFront(node->getValue().advisees->findAt(i));
 
       }
-      else if (treeToBaseReferenceOffOf.find(node->getValue().advisees->findAt(i))->getValue().getStudentAdvisorID() != node->getValue().getPersonID()) {
+      else if (studentNode->getValue().getStudentAdvisorID() != node->getValue().getPersonID()) {
 
-        cout<<"This student has a different faculty assigned to them already!"<<endl;
+        //This student has a different faculty assigned to them already
         listOfAdviseesToRemove.addFront(node->getValue().advisees->findAt(i));
 
       }
 
     }
 
-    cout<<"setting referential integrity"<<endl;
-
+    //remove the advisees that need to be removed for this faculty node:
     for (int i = 0; i < listOfAdviseesToRemove.getSize(); i++) {
 
       node->getValue().advisees->remove(listOfAdviseesToRemove.findAt(i));
 
     }
-
-    cout<<"referential integrity set!"<<endl;
 
     initializeReferentialIntegrityOfTable(node->right, treeToBaseReferenceOffOf);
 
@@ -481,6 +502,7 @@ void FacultyTable::initializeReferentialIntegrityOfTable(TreeNode<int, Faculty>*
 
 }
 
+//removes an advisee for a faculty member:
 void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeReference) {
 
   int IDOfFacultyToRemoveAdviseeFor;
@@ -494,6 +516,7 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
 
   if (cin.fail()) {
 
+    //cin will fail if the user does not enter an integer, so the error state needs to be cleared in order for cin to be used again
     cin.clear();
     cout<<"Invalid Input: You must enter an integer ID for the Faculty you wish to remove an advisee for"<<endl;
     return;
@@ -503,6 +526,7 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
   TreeNode<int, Faculty>* facultyToRemoveAdviseeFor = find(IDOfFacultyToRemoveAdviseeFor);
   if (facultyToRemoveAdviseeFor == NULL) {
 
+    //the faculty member the user wants to deal with does not exist in the current database
     cout<<"Sorry, but the ID you gave is the ID of a faculty member that does not exist in the current database."<<endl;
     return;
 
@@ -515,6 +539,7 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
 
   if (cin.fail()) {
 
+    //cin will fail if the user does not enter an integer, so the error state needs to be cleared in order for cin to be used again
     cin.clear();
     cout<<"Invalid Input: You need to enter an integer ID for the advisee you wish to remove from this faculty member"<<endl;
     return;
@@ -524,6 +549,7 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
   TreeNode<int, Student>* adviseeToRemove = studentTreeReference.find(IDOfAdviseeToRemove);
   if (adviseeToRemove == NULL) {
 
+    //the advisee the user wants to remove from this advisor does not exist in the current database
     cout<<"Sorry, but the ID you inserted is the ID of a student that does not exist in the current database"<<endl;
     return;
 
@@ -544,6 +570,14 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
   //automatically assign this advisee to another advisor:
   while (true) {
 
+    /*
+
+    -This part of this method will not even be reached if the faculty table
+    is empty because then the ID the user gave for the faculty member would have resulted in
+    an faculty member that does not exist in the current table, causing this command to abort, so there
+    is no need to check if listOfIDSThatExistInTree has a size equal to 0.
+
+    */
     int randomNumber = rand() % listOfIDSThatExistInTree->getSize();
 
     if (listOfIDSThatExistInTree->getSize() == 1) {
@@ -574,25 +608,30 @@ void FacultyTable::removeAnAdvisee(BinarySearchTree<int, Student>& studentTreeRe
 
   }
 
-  commandModifiedTableSuccessfully = true;
+  commandModifiedTableSuccessfully = true; //signal to the program that this command modified the database so that a snapshot of the database prior to these changes can be saved for potential rollback
   cout<<"Advisee removed and automatically reassigned to advisor with ID "<<adviseeToRemove->getValue().getStudentAdvisorID()<<endl;
 
 }
 
+//sets up the faculty table at the start of the program by reading through the studentTable.txt file
 void FacultyTable::setUpTable(FacultyTable& objectToBuildUsingTheTextFile) {
 
+  //Faculty table inherited from FileInputManager in order to access this method:
   readFile("facultyTable.txt", objectToBuildUsingTheTextFile);
 
 }
 
+//removes a faculty member from the database
 void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentTreeReference) {
 
   int IDOfFacultyToRemove;
   cout<<"Enter the ID of the faculty member you wish to remove from the database"<<endl;
   cin>>IDOfFacultyToRemove;
+  cin.ignore();
 
   if (cin.fail()) {
 
+    //cin will fail if the user does not enter an integer
     cin.clear();
     cout<<"Invalid Input: You must enter an integer for the ID of the faculty you wish to remove"<<endl;
     return;
@@ -600,25 +639,13 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
   }
   else {
 
+    //get the faculty member the user wants to remove
     TreeNode<int, Faculty>* facultyNodeToRemove = find(IDOfFacultyToRemove);
 
     if (facultyNodeToRemove != NULL) {
 
       //remove the ID of the faculty that is about to be deleted from the list of faculty IDs currently in the tree
-      cout<<"REMOVING FACULTY..."<<endl;
-      cout<<"REMOVING FACULTY WITH ID: "<<IDOfFacultyToRemove<<endl;
-      listOfIDSThatExistInTree->remove(IDOfFacultyToRemove); //ERROR: THIS IS NOT REMOVING THE RIGHT THING: in betweeen deletion does not work!!!
-      cout<<"IDS LEFT IN LIST OF IDS THAT EXIST IN TREE ARE: "<<endl;
-
-      /*for (int i = 0; i < listOfIDSThatExistInTree->getSize(); i++) {
-
-        cout<<listOfIDSThatExistInTree->findAt(i)<<endl;
-
-      }*/
-      //listOfIDSThatExistInTree->printList();
-
-
-      cout<<"REASSIGNING ADVISEES IF HE OR SHE HAS ANY..."<<endl;
+      listOfIDSThatExistInTree->remove(IDOfFacultyToRemove);
 
       //Reassign each of the advisees for this faculty member to a new advisor
       if (listOfIDSThatExistInTree->empty() == false) {
@@ -626,26 +653,18 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
         //there are still faculties that can be assigned to the advisees of this faculty
         for (int i = 0; i < facultyNodeToRemove->getValue().advisees->getSize(); i++) {
 
-          cout<<"GETTING ID OF ADVISEE..."<<endl;
           int IDOfAdviseeToReassign = facultyNodeToRemove->getValue().advisees->findAt(i);
 
-          cout<<"MAKING RANDOM NUMBER..."<<endl;
           int randomNumber = rand() % listOfIDSThatExistInTree->getSize(); //randomly reassign:
 
-          cout<<"RANDOMLY ASSIGNING ADVISEE TO ADVISOR NOW..."<<endl;
           TreeNode<int, Student>* advisee = studentTreeReference.find(IDOfAdviseeToReassign);
           advisee->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
-          advisee->getValue().setStudentHasBeenAssignedToAnAdviseeAlready(true);
-          //studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(listOfIDSThatExistInTree->findAt(randomNumber));
 
           //tell the advisor being assigned to this new advisee that they have been assigned to this new advisee:
-          cout<<"TELLING ADVISOR THAT THEY HAVE BEEN ASSIGNED TO THIS STUDENT..."<<endl;
           int IDOfAdvisorToAssignAdviseeTo = listOfIDSThatExistInTree->findAt(randomNumber);
 
-          cout<<"FINSIHING TELLING ADVISOR THAT THEY HAVE BEEN ASSIGNED TO THIS STUDENT..."<<endl;
           find(IDOfAdvisorToAssignAdviseeTo)->getValue().addAdvisee(IDOfAdviseeToReassign);
 
-          cout<<"DONE!"<<endl;
         }
 
       }
@@ -654,13 +673,9 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
         //Tell student advisee that there is no advisors left for them to be assigned to:
         for (int i = 0; i < facultyNodeToRemove->getValue().advisees->getSize(); i++) {
 
-          cout<<"GETTING ID OF ADVISEE..."<<endl;
           int IDOfAdviseeToReassign = facultyNodeToRemove->getValue().advisees->findAt(i);
 
-          cout<<"TELLING ADVISEE THAT THERE IS NO ADVISORS LEFT WHO CAN TAKE THEM..."<<endl;
           studentTreeReference.find(IDOfAdviseeToReassign)->getValue().setAdvisorID(-1);
-
-          cout<<"DONE!"<<endl;
 
         }
 
@@ -669,11 +684,12 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
       //erase the faculty from the tree
       cout<<"Faculty member removed from database."<<endl;
       erase(IDOfFacultyToRemove);
-      commandModifiedTableSuccessfully = true;
+      commandModifiedTableSuccessfully = true; //signal to program that database was changed so that a snapshot of the database prior to the change can be saved for potential rollback
 
     }
     else {
 
+      //the user wants to remove a faculty member that does not exist in the current database
       cout<<"Sorry, but the ID of the faculty member you wish to remove does not exist in the currrent database"<<endl;
       return;
 
@@ -683,35 +699,30 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
 
 }
 
+//reads from the file opened by FileInputManager and correctly makes the faculty objects following the rules set for the facultyTable.txt file
 void FacultyTable::readFromFileWithSpecificRules(string line) {
 
-  //std::cout<<objectToBuildUsingTheTextFile.getCurrentLineNumber()<<std::endl;
-  //cout<<"Creating faculty..."<<endl;
   if (currentLineNumber == 1) {
 
     //this is the faculty's id
-    //cout<<"Faculty ID"<<endl;
     facultyToAddToTable->setPersonID(stoi(line));
 
   }
   else if (currentLineNumber == 2) {
 
     //this is the faculty's name
-    //cout<<"Faculty name"<<endl;
     facultyToAddToTable->setName(line);
 
   }
   else if (currentLineNumber == 3) {
 
     //this is the faculty's level
-    //cout<<"Faculty level"<<endl;
     facultyToAddToTable->setLevel(line);
 
   }
   else if (currentLineNumber == 4) {
 
     //this is the faculty's department
-    //cout<<"faculty department"<<endl;
     facultyToAddToTable->setDepartment(line);
 
 
@@ -719,48 +730,26 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
   else if (currentLineNumber == 5) {
 
     //this is the line that contains the number of numberOfAdvisees this faculty has:
-    //std::cout<<"Faculty ID: "<<stoi(line)<<std::endl;
-    //cout<<"Number of advisees"<<endl;
     numberOfAdvisees = stoi(line);
 
   }
   else if ((currentLineNumber - 5) <= numberOfAdvisees) {
 
     //this line has the id of a advisee
-    //cout<<"Adding advisee"<<endl;
     facultyToAddToTable->addAdvisee(stoi(line));
 
   }
 
   if (((currentLineNumber - 5) == numberOfAdvisees)) {
 
-    //cout<<"Adding faculty..."<<endl;
     //we were on the last line representing data for this faculty, the object is now ready to be added into the tree, and everything should be reset for next faculty:
-    //std::cout<<currentLineNumber<<std::endl;
-
-    //std::cout<<"Inserting faculty into tree..."<<std::endl;
-    //objectToBuildUsingTheTextFile.setCurrentLineNumber(1);
     currentLineNumber = 1;
     numberOfAdvisees = 0;
-    //objectToBuildUsingTheTextFile.setNumberOfAdvisees(0);
-    std::cout<<"Number of Advisees: "<<facultyToAddToTable->advisees->getSize()<<std::endl;
-
-    int arrayOfAdvisees[facultyToAddToTable->advisees->getSize()];
-
-    for (int i = 0; i < facultyToAddToTable->advisees->getSize(); i++) {
-
-      //std::cout<<facultyToAddToTable->advisees->findAt(i)<<std::endl;
-      arrayOfAdvisees[i] = facultyToAddToTable->advisees->findAt(i);
-
-    }
 
     listOfIDSThatExistInTree->addFront(facultyToAddToTable->getPersonID());
-    insert(facultyToAddToTable->getPersonID(), /*Faculty(facultyToAddToTable.getName(), facultyToAddToTable.getLevel(), facultyToAddToTable.getDepartment(), facultyToAddToTable.getPersonID(), arrayOfAdvisees, facultyToAddToTable.getAdvisees().getSize())*/*facultyToAddToTable);
-    //delete facultyToAddToTable->advisees;
+    insert(facultyToAddToTable->getPersonID(), *facultyToAddToTable);
     delete facultyToAddToTable;
     facultyToAddToTable = new Faculty();
-
-    //cout<<"Faculty added!"<<endl;
 
   }
   else {

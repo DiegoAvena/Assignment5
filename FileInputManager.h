@@ -3,101 +3,50 @@
 
 #include <fstream>
 #include <iostream>
-//#include "DataBaseManager.h"
-//#include "FacultyTable.h"
 
 template <typename dataType>
 
+/*
+
+-Allows for the reading of a .txt file into the data slots for a class, using a method called readFromFileWithSpecificRules() that
+must be defined in the class using this class to follow more specific rules for reading from the file and filling in the data slots.
+
+*/
 class FileInputManager {
-
-protected:
-  /*void readFromFileWithSpecificRules(std::string line, dataType& objectToBuildUsingTheTextFile) {
-
-    std::cout<<"nothing being added to tree!"<<std::cout;
-
-
-  }*/
 
 public:
 
-  //virtual void readFromFileWithSpecificRules(std::string line);
-
+  //default constructor
   FileInputManager() {
 
   }
 
+  //Destructor
   ~FileInputManager() {
 
   }
 
+  //reads from the specified file and if it does not exist, tells the user that the file could not be opened
   void readFile(std::string fileName, dataType& objectToBuildUsingTheTextFile) {
 
     std::ifstream fileToReadFrom(fileName);
-    //fileToReadFrom.exceptions(std::ifstream::failbit|std::ifstream::badbit);
 
     if (fileToReadFrom.is_open()) {
+      //the file sucessfully opened:
 
       std::string line;
-      std::cout<<"FILE WITH NAME: "<<fileName<<"OPENED..."<<std::endl;
 
       while (getline(fileToReadFrom, line)) {
 
-        //getline(fileToReadFrom, line);
-        std::cout<<line<<std::endl;
+        //fill in the correct data slots of this object by following its rules for reading from a file:
         objectToBuildUsingTheTextFile.readFromFileWithSpecificRules(line);
 
       }
 
-      /*string line;
-      unsigned int currentLineNumber = 1;
-      unsigned int numberOfFirstLineForDataSet = 1;
-
-      if (fileName == "facultyTable.txt") {
-
-        unsigned int lineWhereNumberOfAdviseesWas;
-        unsigned int numberOfAdvisees;
-
-        while (getLine(fileToReadFrom, line)) {
-
-          if ((currentLineNumber - numberOfFirstLineForDataSet) < 4) {
-
-
-
-          }
-          else if ((currentLineNumber - numberOfFirstLineForDataSet) == 4) {
-
-            numberOfAdvisees = stoi(line);
-
-          }
-          else if ((currentLineNumber - lineWhereNumberOfAdviseesWas) <= numberOfAdvisees) {
-
-
-
-          }
-
-          if () {
-
-
-
-
-          }
-
-        }
-
-      }
-      else {
-
-        while (getLine(fileToReadFrom, line)) {
-
-
-
-        }
-
-      }*/
-
     }
     else {
 
+      //file could not be opened because it did not exist
       if (fileName == "facultyTable.txt") {
 
         std::cout<<"Sorry, but there is no facultyTable file to read from, initializing to an empty table instead."<<std::endl;
@@ -110,7 +59,6 @@ public:
       }
 
     }
-
 
   }
 

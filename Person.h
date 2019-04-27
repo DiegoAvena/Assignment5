@@ -3,31 +3,41 @@
 
 #include <iostream>
 
+/*
+
+-Contains the generic components for a person in this database,
+such as id, name, and their level
+
+*/
 class Person {
 
 protected:
-  unsigned int personID;
+  unsigned int personID; //the ID of this person
 
-  std::string name;
-  std::string level;
+  std::string name; //the name of this person
+
+  std::string level; //the level of this person
 
 public:
-  Person();
-  Person(unsigned int personID, std::string name, std::string level);
+  Person(); //default constructor
 
-  ~Person();
+  Person(unsigned int personID, std::string name, std::string level); //overloaded constructor
 
-  const unsigned int& getPersonID() const;
+  ~Person(); //destructor
 
-  const std::string& getName() const;
-  const std::string& getLevel() const;
+  const unsigned int& getPersonID() const; //returns a reference to the ID of this person
 
-  void setPersonID(unsigned int personID);
+  const std::string& getName() const; //returns a reference to the name of this person
 
-  void setName(std::string name);
-  void setLevel(std::string level);
+  const std::string& getLevel() const; //returns a reference to the level of this person
 
-  const bool operator == (Person otherPerson);
+  void setPersonID(unsigned int personID); //mutator method for setting the id of this person
+
+  void setName(std::string name); //mutator method for setting the name of this person
+
+  void setLevel(std::string level); //mutator method for setting the level of this person
+
+  const bool operator == (Person otherPerson); //overloaded operator for comparing 2 Person objects
 
 };
 

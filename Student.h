@@ -3,36 +3,38 @@
 
 #include "Person.h"
 
+/*
+
+-Contains the components that make up a student for this database. Extends from
+Person to use its name, personID, and level members, since these are shared between
+student and faculty objects.
+
+*/
 class Student: public Person {
 
 private:
 
-  std::string major;
+  std::string major; //the major of this student
 
-  unsigned int advisorID;
+  unsigned int advisorID; //the ID of the advisor for this student
 
-  double studentGPA;
-
-  bool studentHasBeenAssignedToAnAdviseeAlready;
+  double studentGPA; //the gpa of this student
 
 public:
-  Student();
-  Student(std::string name, std::string level, std::string major, unsigned int studentID, unsigned int advisorID, double studentGPA);
-  ~Student();
+  Student(); //default constructor
 
-  const unsigned int& getStudentAdvisorID() const;
-  const double& getStudentGPA() const;
+  Student(std::string name, std::string level, std::string major, unsigned int studentID, unsigned int advisorID, double studentGPA); //overloaded constructor
 
-  const std::string& getName() const;
-  const std::string& getLevel() const;
-  const std::string& getMajor() const;
+  ~Student(); //destructor
 
-  bool getStudentHasBeenAssignedToAnAdviseeAlready();
-  void setStudentHasBeenAssignedToAnAdviseeAlready(bool studentHasBeenAssignedToAnAdviseeAlready);
+  const unsigned int& getStudentAdvisorID() const; //accessor method for getting the student advisor ID
+  const double& getStudentGPA() const; //accessor method for getting the student's gpa
 
-  void setAdvisorID(unsigned int advisorID);
-  void setStudentGPA(double studentGPA);
-  void setMajor(std::string major);
+  const std::string& getMajor() const; //accessor method for getting the major of the student
+
+  void setAdvisorID(unsigned int advisorID); //mutator method for setting the advisor id
+  void setStudentGPA(double studentGPA); //mutator method for setting the student's gpa
+  void setMajor(std::string major); //mutator method for setting the student's major
 
 };
 

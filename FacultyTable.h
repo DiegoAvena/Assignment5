@@ -10,7 +10,6 @@
 #include <fstream>
 #include "FileOutputManager.h"
 #include <stdlib.h> // for access to the rand method
-#include <cstdlib> //for access to RAND_MAX constant
 #include <iostream>
 //#include "SnapShotContainer.h"
 #include "UndoManager.h"
@@ -18,14 +17,12 @@
 class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable>, public FileOutputManager<FacultyTable> {
 
 private:
-  //FileOutputManager fileOutputer;
-  //std::ofstream* serializer;
+  
   Faculty* facultyToAddToTable;
 
   //for filling this table up from a text file:
   int currentLineNumber;
   int numberOfFirstLineForDataSet;
-  int numberOfLineWhereNumberOfAdviseesWasAt;
   int numberOfAdvisees;
 
   bool commandModifiedTableSuccessfully;
@@ -45,19 +42,9 @@ public:
 
   void setUpTable(FacultyTable& objectToBuildUsingTheTextFile);
 
-  int getCurrentLineNumber();
-  int getNumberOfFirstLineForDataSet();
-  int getNumberOfLineWhereNumberOfAdviseesWasAt();
-  int getNumberOfAdvisees();
-
   void deleteListOfAdviseesForEachFaculty(TreeNode<int, Faculty>* node);
 
   void readFromFileWithSpecificRules(std::string line);
-
-  void setCurrentLineNumber(int currentLineNumber);
-  void setNumberOfFirstLineForDataSet(int numberOfFirstLineForDataSet);
-  void setNunberOfLineWhereNumberOfAdviseesWasAt(int numberOfLineWhereNumberOfAdviseesWasAt);
-  void setNumberOfAdvisees(int numberOfAdvisees);
 
   void printFaculty(TreeNode<int, Faculty>* node, BinarySearchTree<int, Student>& tree);
   void printASpecificFacultyMember(BinarySearchTree<int, Student>& tree);

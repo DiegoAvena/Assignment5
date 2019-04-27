@@ -1,6 +1,7 @@
 #include "SnapShotContainer.h"
 using namespace std;
 
+//default constructor
 SnapShotContainer::SnapShotContainer() {
 
   previousStudentTable = NULL;
@@ -8,6 +9,7 @@ SnapShotContainer::SnapShotContainer() {
 
 }
 
+//Overloaded constructor, sets previousFacultyTable and previousStudentTable to the specified parameters
 SnapShotContainer::SnapShotContainer(StudentTable* previousStudentTable, FacultyTable* previousFacultyTable) {
 
   this->previousStudentTable = new StudentTable(*previousStudentTable);//previousStudentTable;
@@ -15,6 +17,7 @@ SnapShotContainer::SnapShotContainer(StudentTable* previousStudentTable, Faculty
 
 }
 
+ //copy constructor
 SnapShotContainer::SnapShotContainer(SnapShotContainer* snapShotContainerToCopy) {
 
   this->previousStudentTable = new StudentTable(*snapShotContainerToCopy->getPreviousStudentTable());
@@ -22,8 +25,10 @@ SnapShotContainer::SnapShotContainer(SnapShotContainer* snapShotContainerToCopy)
 
 }
 
+//Destructor
 SnapShotContainer::~SnapShotContainer() {
 
+  //insures the memory allocated for previousStudentTable is deallocated to prevent memory leaks
   if (previousStudentTable != NULL) {
 
     delete previousStudentTable;
@@ -31,6 +36,7 @@ SnapShotContainer::~SnapShotContainer() {
 
   }
 
+  //insures the memory allocated for previousFacultyTable is deallocated to prevent memory leaks
   if (previousFacultyTable != NULL) {
 
     delete previousFacultyTable;
@@ -40,12 +46,14 @@ SnapShotContainer::~SnapShotContainer() {
 
 }
 
+//accessor method for getting a reference to the previousStudentTable
 StudentTable* SnapShotContainer::getPreviousStudentTable() {
 
   return previousStudentTable;
 
 }
 
+//accessor method for getting a reference to the previousFacultyTable
 FacultyTable* SnapShotContainer::getPreviousFacultyTable() {
 
   return previousFacultyTable;

@@ -4,29 +4,40 @@
 
 template <typename dataType>
 
+/*
+
+-A LIFO data structure that uses a singly linked list, meaning it
+can dynamically resize itself.
+
+*/
 class ListBasedStack {
 
 private:
-  SinglyLinkedList<dataType> list;
-  unsigned int stackSize;
+  SinglyLinkedList<dataType> list; //the list that will store the information pushed onto the stack
+  unsigned int stackSize; //the size of the stack, or how many elements are in the stack
 
 public:
-  ListBasedStack(): list(), stackSize(0){
+
+  //default constructor, initializes stackSize to 0
+  ListBasedStack() {
+
+    stackSize = 0;
 
   }
 
+  //destructor
   ~ListBasedStack() {
 
-    std::cout<<"DELETING STACK"<<std::endl;
-
   }
 
+  //checks if the stack is empty
   bool isEmpty() {
 
     return (list.isEmpty());
 
   }
 
+  //returns a copy of the element at the top of the stack
   dataType top() throw(StackEmptyException){
 
     if (isEmpty()) {
@@ -39,6 +50,7 @@ public:
 
   }
 
+  //puts a new element at the top of the stack
   void push(dataType item) {
 
     list.AddFront(item);
@@ -46,6 +58,7 @@ public:
 
   }
 
+  //removes the element at the top of the stack
   void pop() throw(StackEmptyException){
 
     if (isEmpty()) {
@@ -59,6 +72,7 @@ public:
 
   }
 
+  //returns the size of the stack
   unsigned int getSize() {
 
     return stackSize;
