@@ -44,7 +44,7 @@ const std::string& Faculty::getDepartment() const {
 
 }
 
-void Faculty::printAdviseeIds() const{
+void Faculty::printAdviseeIds() {
 
   advisees->printList();
 
@@ -55,7 +55,7 @@ void Faculty::addAdvisee(unsigned int IDOfAdviseeToAdd) {
   advisees->addFront(IDOfAdviseeToAdd);
 }
 
-void Faculty::removeAdvisee(unsigned int IDOfAdviseeToRemove){
+void Faculty::removeAdvisee(unsigned int IDOfAdviseeToRemove) {
 
   advisees->remove(IDOfAdviseeToRemove);
 

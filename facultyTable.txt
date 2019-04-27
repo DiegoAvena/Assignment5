@@ -3,7 +3,7 @@ Dr. Bubba
 Lecturer
 CPSC
 1
-1155666
+2299333
 4455999
 Dr. Saw
 Lecturer
@@ -13,13 +13,14 @@ CPSC
 Dr. Yoda
 Lecturer
 CPSC
-0
+1
+2288000
 6677999
 Dr. Hubble
 Lecturer
 CPSC
 1
-2299333
+1155666
 6688999
 Dr. Windu
 Lecturer

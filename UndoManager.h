@@ -7,26 +7,36 @@
 
 template <typename dataTypeOfItemsToSave>
 
+/*
+
+-UndoManager allows the program to save changes made to the database by using a stack.
+The class saves a specified number of snapshots or instances of the database. For this assignment, this is 5.
+
+*/
 class UndoManager {
 
 private:
-  ListBasedStack<dataTypeOfItemsToSave*> stackToSaveItems;
-  int amountOfItemsThatCanBePushedOntoStack;
-  DoubleLinkedList<dataTypeOfItemsToSave*> itemsToDeleteLater;
+  ListBasedStack<dataTypeOfItemsToSave*> stackToSaveItems; //the stack that will save the snapshots of the database prior to a command changing it
+  int amountOfItemsThatCanBePushedOntoStack; //the amount of items the stack should save up to before it pops older instances of the database to make room for the saving of new instances
+  DoubleLinkedList<dataTypeOfItemsToSave*> itemsToDeleteLater; //used to delete allocated memory for the items to be pushed onto the stack from here
 
 public:
-  UndoManager() {
 
+  //Default constructor, makes it so that only 1 snapshot can be saved onto the stack, so that the user can only undo up to 1 command that changed the database
+  UndoManager() {
+    
     amountOfItemsThatCanBePushedOntoStack = 1;
 
   }
 
+  //overloaded constructor: allows for the setting of a custom number of snapshots that can be saved before older changes start being popped off to make room for new changes
   UndoManager(int amountOfItemsThatCanBePushedOntoStack) {
 
     this->amountOfItemsThatCanBePushedOntoStack = amountOfItemsThatCanBePushedOntoStack;
 
   }
 
+  //Destructor: free memory that was allocated to save the items being pushed onto the stack
   ~UndoManager() {
 
     for (int i = 0; i < itemsToDeleteLater.getSize(); i++) {
@@ -37,29 +47,34 @@ public:
 
   }
 
+  //pushes a snapshot onto the stack, making sure to do the appropriate shifts if the stack is already holding the max amount of snapshots that should be saved
   void saveSnapShot(dataTypeOfItemsToSave* itemToSave) {
 
     dataTypeOfItemsToSave* item = new dataTypeOfItemsToSave(itemToSave);
-    std::cout<<"SAVING A SNAPSHOT..."<<std::endl;
+
     if (stackToSaveItems.getSize() >= amountOfItemsThatCanBePushedOntoStack) {
 
-      //need to remove the oldest snapshot at the bottom of the stack to make room for this new snapshot
+      /*
+
+      the stack saving the instances of the database is already holding the max amount of snapshots
+      that the user can rollback to, so room needs to be made to save this new snapshot by removing the oldest instance in this
+      stack. This is done by the following process due to the LIFO principle of stacks:
+
+      */
+
+      //1: Reverse the current stack:
       ListBasedStack<dataTypeOfItemsToSave*> reverseOfOriginalStack;
       while (stackToSaveItems.isEmpty() == false) {
 
-        //cout<<"ITEM BEING PUSHED ONTO STACK IS: "<<stackToSaveItems.top()->getPreviousFacultyTable()->getRoot()->getValue()<<endl;
         reverseOfOriginalStack.push(stackToSaveItems.top());
-        std::cout<<"Size of reversed stack is: "<<reverseOfOriginalStack.getSize()<<std::endl;
         stackToSaveItems.pop();
 
       }
 
-      std::cout<<"STACK REVERSED..."<<std::endl;
-      //delete reverseOfOriginalStack.top();
-      std::cout<<"REVERSE OF STACK IS EMPTY: "<<reverseOfOriginalStack.isEmpty()<<std::endl;
+      //2.) The item at the top of the reversed stack is the oldest snapshot of the database, remove it:
       reverseOfOriginalStack.pop();
-      std::cout<<"OLDEST COMMAND REMOVED..."<<std::endl;
 
+      //3.) Put everything back into original stack:
       while (reverseOfOriginalStack.isEmpty() == false) {
 
         stackToSaveItems.push(reverseOfOriginalStack.top());
@@ -67,7 +82,7 @@ public:
 
       }
 
-      //now that room has been made, push the recent item to save onto the stack:
+      //4.) now that room has been made, push the recent item to save onto the stack:
       stackToSaveItems.push(item);
 
     }
@@ -78,10 +93,11 @@ public:
 
     }
 
-    itemsToDeleteLater.addFront(item);
+    itemsToDeleteLater.addFront(item); //Done so that when the program ends, the memory allocated for each item here is deallocated to prevent memory leaks
 
   }
 
+  //Checks if the user can rollback to anything, and if they cannot, tells them why
   bool CheckIfUserCanRollback() {
 
     if (stackToSaveItems.isEmpty()) {
@@ -98,6 +114,14 @@ public:
 
   }
 
+  /*
+
+  -Actually performs the rollback by removing the most
+  recent snapshot of the database from the stack and returning it. This
+  method should only be called after CheckIfUserCanRollback has returned true, in order
+  to prevent the throwing of a StackEmptyException.
+
+  */
   dataTypeOfItemsToSave* rollback() {
 
     dataTypeOfItemsToSave* itemToSetBackTo = stackToSaveItems.top();

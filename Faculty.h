@@ -22,7 +22,7 @@ public:
   const std::string& getDepartment() const;
   //const int getAdviseeWithID(unsigned int adviseeID);
 
-  void printAdviseeIds() const;
+  void printAdviseeIds();
   void addAdvisee(unsigned int IDOfAdviseeToAdd);
   void removeAdvisee(unsigned int IDOfAdviseeToRemove);
   //const DoubleLinkedList<unsigned int>* getAdvisees() const;

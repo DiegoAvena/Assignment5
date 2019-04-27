@@ -2,11 +2,17 @@
 Forest Gump
 Sophomore
 History
-3344666
+6677999
 3.8
+2288000
+Skips
+Senior
+CPSC
+5566888
+3.4
 2299333
 Diego Avena
 Sophomore
 CPSC
-6677999
+3344666
 3.8
