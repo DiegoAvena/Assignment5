@@ -1,14 +1,16 @@
 #include "DataBaseManager.h"
 using namespace std;
 
+//default constructor
 DataBaseManager::DataBaseManager() {
 
   masterStudent = new StudentTable();
   masterFaculty = new FacultyTable();
-  undoer = new UndoManager<SnapShotContainer>(5);
+  undoer = new UndoManager<SnapShotContainer>(5); //the max amount of times the user can rollback is 5, so once the number of changes made becomes greater than 5, older changes start getting removed to make room for these new changes
 
 }
 
+//destructor
 DataBaseManager::~DataBaseManager() {
 
   delete masterFaculty;
@@ -20,32 +22,17 @@ DataBaseManager::~DataBaseManager() {
     delete snapShotContainer;
 
   }
-  //delete tempFaculty;
 
 }
 
+//presents the available list of commands to the user
 void DataBaseManager::presentMenuToUser() {
 
   masterStudent->setUpTable(*masterStudent);
   masterFaculty->setUpTable(*masterFaculty);
 
   masterStudent->initializeReferentialIntegrityOfTable(masterStudent->getRoot(), *masterFaculty);
-  //masterFaculty.getRoot();
   masterFaculty->initializeReferentialIntegrityOfTable(masterFaculty->getRoot(), *masterStudent);
-  //tempFaculty(masterFaculty);
-  //FacultyTable* tempFaculty = new FacultyTable(*masterFaculty);
-  //tempFaculty =
-  //tempFaculty->printFaculty(tempFaculty->getRoot(), masterStudent);
-  //delete masterFaculty;
-  //masterFaculty = new FacultyTable(*tempFaculty);
-  //masterFaculty = tempFaculty;
-  //masterFaculty = tempFaculty;
-
-  //StudentTable* tempStudentTable = new StudentTable(*masterStudent);
-  //tempStudentTable->printStudents(tempStudentTable->getRoot(), *masterFaculty);
-  //delete masterStudent;
-  //masterStudent = new StudentTable(*tempStudentTable);
-  //delete tempStudentTable;
 
   while (true) {
 
@@ -113,10 +100,11 @@ void DataBaseManager::checkIfCommandChangedStructureOfDatabase() {
 
 }
 
+//determines which command to carry out based on the number the user inputed
 bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
-  //SnapShotContainer(StudentTable* previousStudentTable, FacultyTable* previousFacultyTable);
-  snapShotContainer = new SnapShotContainer(masterStudent, masterFaculty);
-  cout<<"Master faculty tree in snapshot container has a list of advisees of size: "<<snapShotContainer->getPreviousFacultyTable()->listOfIDSThatExistInTree->getSize()<<endl;
+
+  snapShotContainer = new SnapShotContainer(masterStudent, masterFaculty); //take a snapshot of the current database before any changes are potentially made
+
   if (response == 1) {
 
     masterStudent->printStudents(masterStudent->getRoot(), *masterFaculty);
@@ -182,6 +170,7 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
   }
   else if (response == 9) {
 
+    //add a faculty member
     masterFaculty->AddAFacultyMember(*masterStudent);
     checkIfCommandChangedStructureOfDatabase();
     return false;
@@ -220,50 +209,27 @@ bool DataBaseManager::determineWhichCommandToCarryOut(int response) {
 
     if (undoer->CheckIfUserCanRollback()) {
 
+      //the user can rollback, since here was a snapshot that can be set back to:
       SnapShotContainer* recentSnapShot = undoer->rollback();
 
-      if (recentSnapShot != NULL) {
+      FacultyTable* newFacultyTable = new FacultyTable(*recentSnapShot->getPreviousFacultyTable());
+      StudentTable* newStudentTable = new StudentTable(*recentSnapShot->getPreviousStudentTable());
 
-        cout<<"ROLLBACK STARTING..."<<endl;
+      //delete the tables that have the changes the user is trying to undo:
+      delete masterFaculty;
+      delete masterStudent;
 
-        //there was a snapshot that can be set back to:
-        FacultyTable* newFacultyTable = new FacultyTable(*recentSnapShot->getPreviousFacultyTable());
-        StudentTable* newStudentTable = new StudentTable(*recentSnapShot->getPreviousStudentTable());
+      //set the tables that were just cleared to the new tables that are the previous data tables:
+      masterFaculty = new FacultyTable(*newFacultyTable);
+      masterStudent = new StudentTable(*newStudentTable);
 
-        cout<<"PREVIOUS TABLES AQQUIRED!"<<endl;
+      //delete the new tables that were made to store the previous tables the database was going back to
+      delete newFacultyTable;
+      delete newStudentTable;
 
-        //delete the tables that have the changes the user is trying to undo:
-        cout<<newFacultyTable->listOfIDSThatExistInTree->getSize()<<endl;
-
-        for (int i = 0; i < masterFaculty->listOfIDSThatExistInTree->getSize(); i++) {
-
-          cout<<masterFaculty->listOfIDSThatExistInTree->findAt(i)<<endl;
-
-        }
-
-        delete masterFaculty; //Calling this right after removing a faculty causes a seg fault where the listOfIDSThatExistInTree was never allocated
-        delete masterStudent;
-
-        cout<<"OLD TABLES DELETED"<<endl;
-
-        //set the tables that were just cleared to the new tables that are the previous data tables:
-        masterFaculty = new FacultyTable(*newFacultyTable);
-        masterStudent = new StudentTable(*newStudentTable);
-
-        cout<<"OLD TABLES SET TO PREVIOUS TABLES!"<<endl;
-
-        //delete the new tables that were made to store the previous tables the database was going back to
-        delete newFacultyTable;
-        delete newStudentTable;
-
-        cout<<"DID SOME MEMORY CLEANUP"<<endl;
-        cout<<"ROLLBACK SUCCESS!"<<endl;
-
-      }
+      cout<<"Rollback success, changes have been removed."<<endl;
 
     }
-
-    //cout<<"ROLLBACK FAILURE!"<<endl;
 
     return false;
 

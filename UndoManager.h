@@ -24,7 +24,7 @@ public:
 
   //Default constructor, makes it so that only 1 snapshot can be saved onto the stack, so that the user can only undo up to 1 command that changed the database
   UndoManager() {
-    
+
     amountOfItemsThatCanBePushedOntoStack = 1;
 
   }
@@ -102,7 +102,7 @@ public:
 
     if (stackToSaveItems.isEmpty()) {
 
-      std::cout<<"Cannot undo any more changes"<<std::endl;
+      std::cout<<"Error: Cannot undo any more changes."<<std::endl;
       return false;
 
     }

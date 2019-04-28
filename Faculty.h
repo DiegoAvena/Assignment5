@@ -4,30 +4,36 @@
 #include "Person.h"
 #include "DoubleLinkedList.h"
 
+/*
+
+-Extends from the generic person class to build upon it by
+defining components more specific to a faculty person, such as their department
+and advisees
+
+*/
 class Faculty: public Person{
 
 private:
-  std::string department;
-  //DoubleLinkedList<unsigned int> advisees;
+  std::string department; //the department this faculty member is in
 
 public:
-  //  Student(std::string name, std::string level, std::string major, unsigned int studentID, unsigned int advisorID, double studentGPA);
-  Faculty();
-  Faculty(std::string name, std::string level, std::string department, unsigned int facultyID);
-  Faculty(std::string name, std::string level, std::string department, unsigned int facultyID, int* arrayOfAdvisees, int numberOfAdvisees);
-  ~Faculty();
+  Faculty(); //default constructor
 
-  DoubleLinkedList<unsigned int>* advisees;
+  Faculty(std::string name, std::string level, std::string department, unsigned int facultyID); //overloaded constructor
 
-  const std::string& getDepartment() const;
-  //const int getAdviseeWithID(unsigned int adviseeID);
+  Faculty(std::string name, std::string level, std::string department, unsigned int facultyID, int* arrayOfAdvisees, int numberOfAdvisees); //overloaded constructor
 
-  void printAdviseeIds();
-  void addAdvisee(unsigned int IDOfAdviseeToAdd);
-  void removeAdvisee(unsigned int IDOfAdviseeToRemove);
-  //const DoubleLinkedList<unsigned int>* getAdvisees() const;
+  ~Faculty(); //destructor
 
-  void setDepartment(std::string department);
+  DoubleLinkedList<unsigned int>* advisees; //the list of advisees this faculty member has
+
+  const std::string& getDepartment() const; //accessor method for getting the department this faculty member is in
+
+  void addAdvisee(unsigned int IDOfAdviseeToAdd); //adds an advisee to this advisors advisee list
+
+  void removeAdvisee(unsigned int IDOfAdviseeToRemove); //removes an advisee from this advisors list of advisees
+
+  void setDepartment(std::string department); //mutator method for setting the department of the faculty member
 
 };
 

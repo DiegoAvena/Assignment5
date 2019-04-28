@@ -33,16 +33,9 @@ public:
 
   }
 
-  //copy constructor
-  DoubleLinkedList(DoubleLinkedList& listToCopy) {
-
-    
-  }
-
   //destructor
   ~DoubleLinkedList() {
 
-    std::cout<<"DELETING LIST"<<std::endl;
     while (empty() == false) {
 
       removeFront();
@@ -294,28 +287,24 @@ public:
     }
     else if (dataToRemoveFromList == front->element) {
 
-      std::cout<<"Removing front of list"<<std::endl;
-      std::cout<<"Deleting node with element: "<<front->element<<std::endl;
+      //the node to be removed is the front node of this list, use remove front instead so that the head pointer is updated correctly
       removeFront();
 
     }
     else if (dataToRemoveFromList == back->element) {
 
-      std::cout<<"Removing back of list"<<std::endl;
-      std::cout<<"Deleting node with element: "<<back->element<<std::endl;
+      //the node to be removed is the back of this list, use the remove back method instead so that the back pointer is updated correctly
       removeBack();
 
     }
     else {
 
-      std::cout<<"Removing in between list"<<std::endl;
       DoubleLinkedListNode<dataType>* currentNode = front;
 
       while (currentNode != NULL) {
 
         if (currentNode->element == dataToRemoveFromList) {
 
-          std::cout<<"Deleting node with element: "<<currentNode->element<<std::endl;
           break;
 
         }
@@ -332,7 +321,6 @@ public:
         currentNode->previous->next = currentNode->next;
         currentNode->next->previous = currentNode->previous;
 
-        std::cout<<"About to delete node with element: "<<currentNode->element<<std::endl;
         delete currentNode;
         listSize--;
 
@@ -365,20 +353,17 @@ public:
     else if (position == 0) {
 
       //use the removeFront method so that the front and back pointers are updated correctly:
-      std::cout<<"Remove front"<<std::endl;
       removeFront();
 
     }
     else if (position == (listSize - 1)) {
 
       //use the removeBack method so that the front and back pointers are updated correctly:
-      std::cout<<"Remove back"<<std::endl;
       removeBack();
 
     }
     else {
 
-      std::cout<<"Node to remove is not a back or front of list"<<std::endl;
       int currentPosition = 0;
       DoubleLinkedListNode<dataType>* currentNode = front;
 
@@ -391,7 +376,6 @@ public:
       }
 
       //by this point the current node is the node we want to delete it
-      std::cout<<"Node to remove is not a back or front of list"<<std::endl;
       currentNode->next->previous = currentNode->previous;
       currentNode->previous->next = currentNode->next;
       delete currentNode;
