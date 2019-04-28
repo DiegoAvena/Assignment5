@@ -55,8 +55,6 @@ void DataBaseManager::presentMenuToUser() {
     int userResponse;
     cin>>userResponse;
 
-    cout<<masterStudent->empty()<<endl;
-
     if (cin.fail()) {
 
       cin.clear();
@@ -82,14 +80,12 @@ void DataBaseManager::checkIfCommandChangedStructureOfDatabase() {
 
   if (masterStudent->getCommandModifiedTableSuccessfully()) {
 
-    cout<<"The master student tree was changed!"<<endl;
     masterStudent->setCommandModifiedTableSuccessfully(false);
     undoer->saveSnapShot(snapShotContainer);
 
   }
   else if (masterFaculty->getCommandModifiedTableSuccessfully()) {
 
-    cout<<"The master faculty tree was changed!"<<endl;
     masterFaculty->setCommandModifiedTableSuccessfully(false);
     undoer->saveSnapShot(snapShotContainer);
 
