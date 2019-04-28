@@ -33,6 +33,12 @@ public:
 
   }
 
+  //copy constructor
+  DoubleLinkedList(DoubleLinkedList& listToCopy) {
+
+    
+  }
+
   //destructor
   ~DoubleLinkedList() {
 

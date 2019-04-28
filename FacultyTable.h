@@ -17,9 +17,10 @@
 class FacultyTable: public BinarySearchTree<int, Faculty>, public FileInputManager<FacultyTable>, public FileOutputManager<FacultyTable> {
 
 private:
-  
-  Faculty* facultyToAddToTable;
 
+  Faculty* facultyToAddToTable;
+  DoubleLinkedList< DoubleLinkedList<unsigned int>* >* listOfAdviseeListsToDeleteLater;
+  
   //for filling this table up from a text file:
   int currentLineNumber;
   int numberOfFirstLineForDataSet;

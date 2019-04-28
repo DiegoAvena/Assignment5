@@ -2,7 +2,7 @@
 Forest Gump
 Sophomore
 History
-6677999
+6677000
 3.8
 2288000
 Skips
@@ -14,5 +14,5 @@ CPSC
 Diego Avena
 Sophomore
 CPSC
-6677999
+8855111
 3.8

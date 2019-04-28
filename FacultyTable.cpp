@@ -5,7 +5,7 @@ using namespace std;
 //Default constructor
 FacultyTable::FacultyTable():BinarySearchTree(){
 
-  facultyToAddToTable = new Faculty();
+  //listOfAdviseeListsToDeleteLater = new DoubleLinkedList< DoubleLinkedList<unsigned int>* >();
   currentLineNumber = 1;
   numberOfFirstLineForDataSet = 1;
   commandModifiedTableSuccessfully = false;
@@ -45,6 +45,7 @@ FacultyTable::FacultyTable(const FacultyTable& tableToCopy) {
 
   commandModifiedTableSuccessfully = false;
   listOfIDSThatExistInTree = new DoubleLinkedList<int>();
+  //listOfAdviseeListsToDeleteLater = new DoubleLinkedList< DoubleLinkedList< unsigned int>* >();
 
   for (int i = 0; i < tableToCopy.listOfIDSThatExistInTree->getSize(); i++) {
 
@@ -103,7 +104,20 @@ FacultyTable::FacultyTable(int rootKey, Faculty rootValue):BinarySearchTree(root
 FacultyTable::~FacultyTable(){
 
   delete listOfIDSThatExistInTree;
-  delete facultyToAddToTable;
+
+  /*cout<<"DELETING LIST OF ADVISEES FOR THE FACULTY TO ADD TO TABLE OBJECT"<<endl;
+  int sizeOfListOfAdviseeLists = listOfAdviseeListsToDeleteLater->getSize();
+  for (int i = 0; i < sizeOfListOfAdviseeLists; i++) {
+
+    delete listOfAdviseeListsToDeleteLater->findAt(i);
+    cout<<"YIPPYAP"<<endl;
+    //cout<<listOfAdviseeListsToDeleteLater->findAt(i)<<endl;
+
+  }*/
+
+  //delete listOfAdviseeListsToDeleteLater;
+  cout<<"DONE..."<<endl;
+
   deleteListOfAdviseesForEachFaculty(root);
 
 }
@@ -683,7 +697,10 @@ void FacultyTable::removeAFacultyMember(BinarySearchTree<int, Student>& studentT
 
       //erase the faculty from the tree
       cout<<"Faculty member removed from database."<<endl;
+
+      delete facultyNodeToRemove->getValue().advisees; //makes sure the memory allocated by the Faculty class for the advisee list is freed
       erase(IDOfFacultyToRemove);
+
       commandModifiedTableSuccessfully = true; //signal to program that database was changed so that a snapshot of the database prior to the change can be saved for potential rollback
 
     }
@@ -705,6 +722,7 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
   if (currentLineNumber == 1) {
 
     //this is the faculty's id
+    facultyToAddToTable = new Faculty();
     facultyToAddToTable->setPersonID(stoi(line));
 
   }
@@ -724,7 +742,6 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
 
     //this is the faculty's department
     facultyToAddToTable->setDepartment(line);
-
 
   }
   else if (currentLineNumber == 5) {
@@ -748,8 +765,20 @@ void FacultyTable::readFromFileWithSpecificRules(string line) {
 
     listOfIDSThatExistInTree->addFront(facultyToAddToTable->getPersonID());
     insert(facultyToAddToTable->getPersonID(), *facultyToAddToTable);
+
+    //listOfAdviseeListsToDeleteLater->addFront(facultyToAddToTable->advisees);
+
+    /*
+
+    -no need to delete the list of advisees that was attached to this faculty object because doing so
+    causes a seg fault later when these lists are deleted for the copy of
+    this faculty object that was placed into the table, so the faculty copy added into the table
+    still points at this same advisee list so it is deleted by the method deleteListOfAdviseesForEachFaculty. This means there
+    will be no memory leak.
+
+    */
+
     delete facultyToAddToTable;
-    facultyToAddToTable = new Faculty();
 
   }
   else {

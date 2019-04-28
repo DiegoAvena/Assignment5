@@ -195,6 +195,7 @@ void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>*
         if (node->getValue().getPersonID() == facultyAdvisorForThisStudent->getValue().advisees->findAt(i)) {
 
           //the student is already assigned to this faculty member, do not add student into this advisor's list of advisees
+          cout<<"Advisor does not need to be notified that they have a new advisee..."<<endl;
           needToAddStudentToAdvisorsList = false;
 
         }
@@ -204,6 +205,17 @@ void StudentTable::initializeReferentialIntegrityOfTable(TreeNode<int, Student>*
       if (needToAddStudentToAdvisorsList) {
 
         //this student was assigned to an existing faculty advisor but that faculty advisor needs to be notified to add this student to their list:
+        cout<<"Faculty now has "<<facultyAdvisorForThisStudent->getValue().advisees->getSize()<<" advisees assigned to them"<<endl;
+        facultyAdvisorForThisStudent->getValue().advisees->addFront(node->getValue().getPersonID());
+
+      }
+
+    }
+    else if (facultyAdvisorForThisStudent != NULL) {
+
+      if (facultyAdvisorForThisStudent->getValue().advisees->find(node->getValue().getPersonID()) == -1) {
+
+        //the advisee has a faculty advisor that exists in the faculty tree, but that advisor needs to be notified that they are assigned to this student:
         facultyAdvisorForThisStudent->getValue().advisees->addFront(node->getValue().getPersonID());
 
       }

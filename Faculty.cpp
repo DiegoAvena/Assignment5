@@ -36,6 +36,8 @@ Faculty::Faculty(std::string name, std::string level, std::string department, un
 
 Faculty::~Faculty() {
 
+  //delete advisees;
+
 }
 
 const std::string& Faculty::getDepartment() const {

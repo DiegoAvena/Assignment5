@@ -18,16 +18,16 @@ CPSC
 Dr. Cash
 Professor
 History
-0
-6677999
-Dr. Hubble
-Lecturer
-CPSC
-2
+1
 1155666
-2299333
 6688999
 Dr. Windu
 Lecturer
 History
 0
+8855111
+Dr. Bruh Bruh
+Lecturer
+CPSC
+1
+2299333
