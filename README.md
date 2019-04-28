@@ -8,6 +8,7 @@ faculty and student records.
 ----------------------------------------------------------------------------------------------------------------------------------
 
 -IMPORTANT NOTES FOR THIS PROGRAM:
+
 1.) Only values greater then 0 should be entered for student and faculty ids
 
 2.) These are the rules to follow when writing your own facultyTable.txt file for this program to read through:
