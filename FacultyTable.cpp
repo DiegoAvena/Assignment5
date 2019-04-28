@@ -7,7 +7,6 @@ FacultyTable::FacultyTable():BinarySearchTree(){
 
   //listOfAdviseeListsToDeleteLater = new DoubleLinkedList< DoubleLinkedList<unsigned int>* >();
   currentLineNumber = 1;
-  numberOfFirstLineForDataSet = 1;
   commandModifiedTableSuccessfully = false;
   listOfIDSThatExistInTree = new DoubleLinkedList<int>();
 
@@ -116,7 +115,7 @@ FacultyTable::~FacultyTable(){
   }*/
 
   //delete listOfAdviseeListsToDeleteLater;
-  cout<<"DONE..."<<endl;
+  //cout<<"DONE..."<<endl;
 
   deleteListOfAdviseesForEachFaculty(root);
 
