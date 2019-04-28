@@ -16,3 +16,15 @@ Sophomore
 CPSC
 8855111
 3.8
+4400999
+Rigby
+Freshman
+CPSC
+8855111
+3.2
+6699000
+Mordecai
+Sophomore
+Math
+6688999
+3.2

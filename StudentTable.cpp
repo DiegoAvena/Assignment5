@@ -565,8 +565,8 @@ void StudentTable::addAStudent(FacultyTable& facultyTree) {
   }
 
   //maintain referential integrity:
-  int studentHasAFakeAdvisor = facultyTree.listOfIDSThatExistInTree->find(advisorIDOfNewStudentToAdd);
-  if ((/*facultyTree.listOfIDSThatExistInTree->find(advisorIDOfNewStudentToAdd)*/studentHasAFakeAdvisor == -1) && (facultyTree.empty() == false)) {
+  TreeNode<int, Faculty>* facultyAdvisor = facultyTree.find(advisorIDOfNewStudentToAdd);
+  if ((facultyAdvisor == NULL) && (facultyTree.empty() == false)) {
 
     //this student has been given a faculty that does not actually exist in the current database, and there are advisors in the faculty tree, assign them to a random faculty member:
     int randomNumber = rand() % facultyTree.listOfIDSThatExistInTree->getSize();
@@ -577,10 +577,20 @@ void StudentTable::addAStudent(FacultyTable& facultyTree) {
     facultyTree.find(advisorIDOfNewStudentToAdd)->getValue().advisees->addFront(IDOfNewStudentToAdd);
 
   }
-  else if (studentHasAFakeAdvisor == -1) {
+  else if (facultyAdvisor == NULL) {
 
     //the faculty table is empty, so there are no advisors to assign this student to, set their advisor ID to -1:
     advisorIDOfNewStudentToAdd = -1;
+
+  }
+  else {
+
+    if (facultyAdvisor->getValue().advisees->find(IDOfNewStudentToAdd) == -1) {
+
+      //the student is not assigned to a fake advisor but that advisor needs to be told that they are assigned to this new student:
+      facultyAdvisor->getValue().advisees->addFront(IDOfNewStudentToAdd);
+
+    }
 
   }
 

@@ -169,7 +169,7 @@ public:
 
   }
 
-  //gets the height of the given node, which is the max depth of that node
+  //gets the height of the given node, which is the max depth of that node: https://www.geeksforgeeks.org/write-a-c-program-to-find-the-maximum-depth-or-height-of-a-tree/
   unsigned int height(K keyOfNodeToGetHeightOf) throw(NodeNotFoundInTreeException){
 
     TreeNode<K, V>* nodeToGetHeightOf = root;

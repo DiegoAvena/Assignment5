@@ -12,22 +12,5 @@ int main(int argc, char const *argv[]) {
   DataBaseManager dataBaseManager;
   dataBaseManager.presentMenuToUser(); //this launches the program/database
 
-  /*DoubleLinkedList<int>* list = new DoubleLinkedList<int>();
-  list->addFront(1);
-  list->addFront(2);
-  list->printList(); //should be 2, 1
-
-  DoubleLinkedList<int>* copyOfOldList = new DoubleLinkedList<int>();
-
-  for (int i = 0; i < list->getSize(); i++) {
-
-    copyOfOldList->addBack(list->findAt(i));
-
-  }
-
-  delete list;
-  copyOfOldList->printList(); //should be 2, 1
-  delete copyOfOldList;*/
-
   return 0;
 }
