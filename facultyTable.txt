@@ -1,35 +1,6 @@
-3344666
-Dr. Bubba
-Lecturer
-CPSC
-0
-4455999
-Dr. Saw
-Lecturer
-CPSC
-0
-5566888
-Dr. Yoda
-Lecturer
-CPSC
-1
-2288000
-6677000
-Dr. Cash
-Professor
-History
-1
-1155666
-6688999
-Dr. Windu
-Lecturer
-History
-1
-6699000
-8855111
-Dr. Bruh Bruh
-Lecturer
-CPSC
-2
 4400999
+Dr. Yipper
+Lecturer
+CPSC
+1
 2299333

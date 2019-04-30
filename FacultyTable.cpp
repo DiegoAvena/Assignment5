@@ -260,20 +260,34 @@ void FacultyTable::AddAFacultyMember(BinarySearchTree<int, Student>& studentTree
 
       if (studentNode != NULL) {
 
-        //remove this advisee from their previous advisor since a student should not have 2 advisors
-        TreeNode<int, Faculty>* facultyToRemoveAdviseeFrom = find(studentNode->getValue().getStudentAdvisorID());
+        if (newFacultyToAdd->advisees->find(studentNode->getValue().getPersonID()) == -1) {
 
-        if (facultyToRemoveAdviseeFrom != NULL) {
+          //this student is not in the advisors advisee list yet, add them in:
+          newFacultyToAdd->addAdvisee(studentNode->getValue().getPersonID());
+          cout<<"Student added to advisee list."<<endl;
 
-          facultyToRemoveAdviseeFrom->getValue().removeAdvisee(studentNode->getKey());
+        }
+        else {
+
+          cout<<"Student is already an advisee for this faculty advisor."<<endl;
 
         }
 
-        //reassign this student to this new faculty member:
-        studentNode->getValue().setAdvisorID(newFacultyToAdd->getPersonID());
-        newFacultyToAdd->addAdvisee(studentNode->getValue().getPersonID());
+        if (studentNode->getValue().getStudentAdvisorID() != newFacultyToAdd->getPersonID()) {
 
-        cout<<"Student added to advisee list"<<endl;
+          //remove this advisee from their previous advisor since a student should not have 2 advisors
+          TreeNode<int, Faculty>* facultyToRemoveAdviseeFrom = find(studentNode->getValue().getStudentAdvisorID());
+
+          if (facultyToRemoveAdviseeFrom != NULL) {
+
+            facultyToRemoveAdviseeFrom->getValue().removeAdvisee(studentNode->getKey());
+
+          }
+
+          //reassign this student to this new faculty member:
+          studentNode->getValue().setAdvisorID(newFacultyToAdd->getPersonID());
+
+        }
 
       }
       else {
