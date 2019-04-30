@@ -27,7 +27,6 @@ public:
 
     while (isEmpty() == false) {
 
-      std::cout<<"Deleting list nodes"<<std::endl;
       RemoveFront();
 
     }
