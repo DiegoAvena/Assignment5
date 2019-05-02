@@ -82,7 +82,7 @@ faculty and student records.
 
 9.) Once rollback has 5 snapshots of the database, if another snapshot needs to be saved, then the oldest snapshot (the item at the bottom of the stack) is removed in order to make room for the new snapshot.
 
-10.) Changing a student's advisor or removing an advisee from an advisor is a change that can be undone by rollback, in addition to removal addition of a students and faculty members.
+10.) Changing a student's advisor or removing an advisee from an advisor is a change that can be undone by rollback, in addition to removal and addition of a students and faculty members.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 REFERENCES:
