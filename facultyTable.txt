@@ -1,18 +1,24 @@
-1100333
-Dr. Orange
-Lecturer
-Math
-0
-4400999
-Dr. Yipper
+3322999
+Dr. Skips
 Lecturer
 CPSC
 1
 2299333
-9911000
-Dr. Skips
+5533222
+Dr. Yap
 Professor
 Math
+0
+7766555
+Dr. Walrus
+Lecturer
+CPSC
 2
-8866555
-1122111
+4455666
+3300111
+9988111
+Dr. Doctor
+Lecturer
+CPSC
+1
+3322000

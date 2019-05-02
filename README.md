@@ -80,6 +80,10 @@ faculty and student records.
 
 8.) The range for ID's is 0 to 2147483647, anything bigger then 2147483647 will cause cin and stoi to fail. And I say 0 because - IDS should also not be entered. (range of int cited from: https://www.tutorialspoint.com/cplusplus/cpp_data_types.htm)
 
+9.) Once rollback has 5 snapshots of the database, if another snapshot needs to be saved, then the oldest snapshot (the item at the bottom of the stack) is removed in order to make room for the new snapshot.
+
+10.) Changing a student's advisor or removing an advisee from an advisor is a change that can be undone by rollback, in addition to removal addition of a students and faculty members.
+
 ----------------------------------------------------------------------------------------------------------------------------------
 REFERENCES:
 -For the height of a tree: https://www.geeksforgeeks.org/write-a-c-program-to-find-the-maximum-depth-or-height-of-a-tree/
