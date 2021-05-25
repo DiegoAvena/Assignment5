@@ -2,7 +2,7 @@
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
--A database system that makes use of Binary Search trees to keep track of
+-A graph based database system that makes use of Binary Search trees to keep track of
 faculty and student records.
 
 ----------------------------------------------------------------------------------------------------------------------------------
